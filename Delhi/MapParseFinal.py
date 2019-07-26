@@ -9,9 +9,9 @@ from collections import OrderedDict
 import datetime
 import time
 
-sleepTime = 1	      #Time to wait for next iteration
+sleepTime = 10	      #Time to wait for next iteration
 fileName = 'dummy.csv'             #Name of the filename to save as csv
-key='noeXTjzoym4GbxYjEXWdYM8Z0ij7lOYq'          #Key fortransit website
+key='6uwbqTNiek5jYJKFAev0DZgH5LdeqXAR'          #Key fortransit website
 
 def entityCheck(feed):
     if(feed.entity):
@@ -20,17 +20,19 @@ def entityCheck(feed):
 
 def getResponse():
     response = ''
-    while response == '':
+    while True:
         try:
             response = requests.get('https://otd.delhi.gov.in/api/realtime/VehiclePositions.pb?key='+key)
+            if(response.ok):
+                return response
             break
         except:
             print("Connection refused by the server..")
             print("Let me sleep for 5 seconds")
             print("ZZzzzz...")
-            time.sleep(5)
+            time.sleep(2)
             print("Was a nice sleep, now let me continue...")
-            continue
+            #continue
     return response
 
 def getFeed():
@@ -86,5 +88,5 @@ def main():
         iteration+=1
         print("Iter : {0}, Shape : {1}".format(iteration,newFrame.shape))
     
-if __name__=="__main__":
-    main()
+#if __name__=="__main__":
+#    main()
