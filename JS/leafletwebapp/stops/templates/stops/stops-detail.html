@@ -1,0 +1,37 @@
+{% load leaflet_tags %}
+<html>
+<head>
+
+        {% leaflet_css %}
+    {% leaflet_js %}
+    
+
+    <style>
+        html, body { height: 100%; width: 99%; margin: 10; }
+        div.one{
+            height: 80%;
+            width: 100%
+        }
+        </style>	
+
+<div class="one">
+    <h1>{{ stops.stop_name }}</h1>
+    {% leaflet_map "main" callback="map_init" %}
+</div>
+
+<script type="text/javascript">
+    function map_init(map, options) {
+        // get point lat and lon
+        var lon = "{{ stops.geometry.x }}";
+        var lat = "{{ stops.geometry.y }}";
+        // zoom to point & add it to map
+        map.setView([lat, lon], 12);
+        L.marker([lat, lon]).addTo(map);
+    }
+</script>
+</head>
+<body>
+    
+    <!-- {% leaflet_map "main" %} -->
+</body>
+</html>
