@@ -28,8 +28,9 @@ Delhi/data/india_road_network/*
 Delhi/data/DTC_dataset/*
 Denver/data/crime.csv
 Delhi/data/GTFS.zip
-JS/leafletwebapp/stops/migrations/*
 JS/leafletwebapp/buses/migrations/*
+JS/leafletwebapp/stops/migrations/*
+JS/leafletwebapp/.vscode/*
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
