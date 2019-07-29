@@ -4,7 +4,7 @@ from django.contrib.gis.db import models as geomodels
 
 
 class Stops(models.Model):
-    geometry = geomodels.PointField()
+    # geometry = geomodels.PointField()
     stop_id = models.IntegerField(blank=False)
 
     stop_code = models.CharField(max_length=100, blank=False)

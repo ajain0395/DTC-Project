@@ -22,8 +22,8 @@
 <script type="text/javascript">
     function map_init(map, options) {
         // get point lat and lon
-        var lon = "{{ stops.geometry.x }}";
-        var lat = "{{ stops.geometry.y }}";
+        var lon = "{{ stops.longitude }}";
+        var lat = "{{ stops.latitude }}";
         // zoom to point & add it to map
         map.setView([lat, lon], 12);
         L.marker([lat, lon]).addTo(map);

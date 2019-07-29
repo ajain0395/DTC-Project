@@ -4,4 +4,4 @@ from .models import Stops
 
 @admin.register(Stops)
 class StopAdmin(OSMGeoAdmin):
-    list_display = ('stop_name', 'geometry')
+    list_display = ('stop_name', 'longitude','latitude',)
