@@ -47,7 +47,7 @@ def insert_to_stops(X):
                               (X['latitude']),                         
                              ))
         connection.commit()
-        print("Transaction completed successfully ")
+#print("Transaction completed successfully ")
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error in transction Reverting all other operations of a transction ", error)
         connection.rollback()
@@ -55,21 +55,18 @@ def insert_to_stops(X):
         #closing database connection.
         if(connection):
             connection.close()
-            print("PostgreSQL connection is closed")
+#print("PostgreSQL connection is closed")
 
 
 # In[ ]:
 
 
 # gdf = pd.read_csv('/home/ashish/repos/DTC-Project/Delhi/data/DTC_dataset/demo.csv')
-stops_data = pd.read_csv('/home/sarosh-pc/Documents/repository/DTC-Project/Delhi/data/newjsdata/stops_lat_lon.csv')
+stops_data = pd.read_csv('./Delhi/data/newjsdata/stops_lat_lon.csv')
 
 
 stops_dict = stops_data.T.to_dict()
+print("Data Migration Running....")
 for i in range(len(stops_data)):
     insert_to_stops(stops_dict[i])
-
-
-# In[287]:
-
-
+print("Completed....")
