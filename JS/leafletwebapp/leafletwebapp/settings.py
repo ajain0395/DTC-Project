@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'buses.apps.BusesConfig',
     'stops.apps.StopsConfig',
     'leaflet',
 
@@ -59,7 +58,7 @@ ROOT_URLCONF = 'leafletwebapp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR),'templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -133,3 +132,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS =(
+    os.path.join(BASE_DIR,'static'),
+)
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER' : (28.613939, 77.209023),
+    'MAX_ZOOM' : 20,
+    'MIN_ZOOM' : 1,
+    'DEFAULT_ZOOM' :11,
+    'SCALE':'both',
+    'ATTRIBUTION_PREFIX' : "DTC_PROJECT",
+}

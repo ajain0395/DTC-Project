@@ -1,0 +1,76 @@
+<html>
+        {% load leaflet_tags %}
+        {% load static %}
+<head>
+
+        {% leaflet_css %}
+    {% leaflet_js %}
+    
+
+    <!-- <style>
+        html, body { height: 100%; width: 99%; margin: 10; }
+        div.one{
+            height: 100%;
+            width: 100% 
+        }
+
+        </style>	-->
+        <style>.leaflet-container-default {
+            height: 80%;
+            width: 80%;
+        }</style>
+        <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
+
+</head>
+<body>
+            <script type="text/javascript">
+            function map_points(map,options)
+            {
+                              var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-stops' %}",
+                {
+			pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        iconUrl: "static/img/bus_blue_point.png",
+                        iconSize: [24, 28],
+                        iconAnchor: [12, 28],
+                        popupAnchor: [0, -25]
+                    }),
+                    title: feature.properties.stop_name,
+                    riseOnHover: true
+                });
+            },
+			onEachFeature: function(feature,layer){
+				layer.bindPopup(feature.properties.stop_name.toString());
+			}
+		});
+		//datasets.addTo(map);
+		datapoints.addTo(map);
+            }
+
+
+            function map_init(map, options) {
+                // get point lat and lon
+                var lon = "{{ stops.longitude }}";
+                var lat = "{{ stops.latitude }}";
+                // zoom to point & add it to map
+                map.setView([lat, lon], 12);
+                L.marker([lat, lon]).addTo(map);
+            }
+
+        
+            
+        </script>
+    
+        <h1>{{ stops.stop_name }}</h1>
+        {% leaflet_map "gis" callback="map_points"  %}
+        <!-- {% leaflet_map "main" callback="map_init" %} -->
+    <!-- <div >
+        <form method="GET">
+            {% csrf_token %}
+            {{ form }}
+        </form>
+        </div> -->
+    <!-- {% leaflet_map "main" %} -->
+</body>
+</html>
