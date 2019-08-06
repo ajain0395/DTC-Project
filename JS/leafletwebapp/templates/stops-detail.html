@@ -65,12 +65,14 @@
         <h1>{{ stops.stop_name }}</h1>
         {% leaflet_map "gis" callback="map_points"  %}
         <!-- {% leaflet_map "main" callback="map_init" %} -->
-    <!-- <div >
-        <form method="GET">
+    <div >
+        <form method="POST">
             {% csrf_token %}
-            {{ form }}
+            {{ form.as_p }}
+            <!-- <input type="text"> -->
+            <button type="submit">Submit</button>
         </form>
-        </div> -->
+        </div>
     <!-- {% leaflet_map "main" %} -->
 </body>
 </html>

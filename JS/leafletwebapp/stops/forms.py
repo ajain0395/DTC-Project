@@ -1,6 +1,10 @@
 from django import forms
 from .models import Stops
-class LocationsForm(forms.ModelForm):
+from stops.models import post
+
+
+class StopsForm(forms.ModelForm):
+    post = forms.CharField()
     class Meta:
-        model = Stops
-        fields = ('stop_name',)
+        model = post
+        fields = ('post',)
