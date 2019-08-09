@@ -61,7 +61,7 @@ def insert_to_stops(X):
 # In[ ]:
 
 
-# gdf = pd.read_csv('/home/ashish/repos/DTC-Project/Delhi/data/DTC_dataset/demo.csv')
+# gdf = pd.read_csv('./Delhi/data/DTC_dataset/demo.csv')
 stops_data = pd.read_csv('./Delhi/data/newjsdata/stops_lat_lon.csv')
 
 

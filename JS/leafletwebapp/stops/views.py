@@ -13,9 +13,9 @@ class StopsTemplateView(TemplateView):
     template_name = 'stops-detail.html'
     # model = Stops
 
-    def get(self, request):
-        form = StopsForm()
-        return render(request,self.template_name, {'form': form})
+    # def get(self, request):
+    #     form = StopsForm()
+    #     return render(request,self.template_name, {'form': form})
 
 class StopsDetailView(DetailView):
     """
