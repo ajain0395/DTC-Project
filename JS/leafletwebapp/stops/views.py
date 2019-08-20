@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView,TemplateView
 from .models import Stops
+from .models import Buses
 from django.shortcuts import render
 from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponse
@@ -23,14 +24,21 @@ class StopsDetailView(DetailView):
     """
     template_name = 'stops-detail.html'
     model = Stops
-# Create your views here.
 
-# from .forms import LocationsForm
+class BusesDetailView(DetailView):
+    """
+        Buses detail view.
+    """
+    template_name = 'stops-detail.html'
+    model = Buses
 
 def AllStops(request):
     stops_points = serialize('geojson',Stops.objects.all())
     return HttpResponse(stops_points,content_type='json')
 
+def AllBuses(request):
+    buses_points = serialize('geojson',Buses.objects.all())
+    return HttpResponse(buses_points,content_type='json')
 
 
 

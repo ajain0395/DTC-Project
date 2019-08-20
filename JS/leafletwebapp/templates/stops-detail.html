@@ -26,22 +26,26 @@
             <script type="text/javascript">
             function map_points(map,options)
             {
-                              var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-stops' %}",
+                              var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon: L.icon({
-                        iconUrl: "static/img/bus_blue_point.png",
+                        // iconUrl: "static/img/bus_blue_point.png",
+                        iconUrl: "{% static 'img/bus_blue_point.png' %}",
                         iconSize: [24, 28],
                         iconAnchor: [12, 28],
                         popupAnchor: [0, -25]
                     }),
-                    title: feature.properties.stop_name,
+                    // title: feature.properties.stop_name,
+                    title: feature.properties.vehicle_id,
+
                     riseOnHover: true
                 });
             },
 			onEachFeature: function(feature,layer){
-				layer.bindPopup(feature.properties.stop_name.toString());
+				// layer.bindPopup(feature.properties.stop_name.toString());
+                layer.bindPopup(feature.properties.vehicle_id.toString());
 			}
 		});
 		//datasets.addTo(map);
@@ -56,13 +60,12 @@
                 // zoom to point & add it to map
                 map.setView([lat, lon], 12);
                 L.marker([lat, lon]).addTo(map);
-            }
-
-        
-            
+            }           
         </script>
     
         <h1>{{ stops.stop_name }}</h1>
+        <h1>{{ buses.vehicle_id}}</h1>
+
         {% leaflet_map "gis" callback="map_points"  %}
         <!-- {% leaflet_map "main" callback="map_init" %} -->
     <div >
