@@ -40,6 +40,9 @@ def AllBuses(request):
     buses_points = serialize('geojson',Buses.objects.all())
     return HttpResponse(buses_points,content_type='json')
 
+def getspecificbus(request,vehicle_id):
+    queryset = serialize('geojson',Buses.objects.filter(vehicle_id=vehicle_id))
+    return HttpResponse(buses_points,content_type='json')
 
 
 # def LocationsView(request):
