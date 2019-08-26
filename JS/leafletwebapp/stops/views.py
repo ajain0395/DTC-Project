@@ -32,6 +32,18 @@ class BusesDetailView(DetailView):
     template_name = 'stops-detail.html'
     model = Buses
 
+def particular_bus_id(request,vehicle_id):
+    obj = Buses.objects.filter(vehicle_id=vehicle_id)
+    #print (vehicle_id+"hello here")
+    stops_points = serialize('geojson',obj)
+    return HttpResponse(stops_points,content_type='json')
+    # template_name = 'buses_id_details.html'
+    # context = {"object":obj}
+    # return render(request,template_name,context)
+    #pass
+
+
+
 def AllStops(request):
     stops_points = serialize('geojson',Stops.objects.all())
     return HttpResponse(stops_points,content_type='json')

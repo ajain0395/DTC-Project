@@ -24,9 +24,12 @@
 </head>
 <body>
             <script type="text/javascript">
-            function map_points(map,options)
+            function map_points(map,options,mypara)
             {
-                              var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
+                //particular-bus
+                console.log(mypara)
+                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PC4105' %}",
+                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {

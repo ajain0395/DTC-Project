@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import AllStops,StopsDetailView,StopsTemplateView,AllBuses,BusesDetailView
+from .views import AllStops,StopsDetailView,StopsTemplateView,AllBuses,BusesDetailView,particular_bus_id
 
 app_name = 'stops'
 
@@ -19,6 +19,11 @@ urlpatterns = [
 
         url(r'^$',
         StopsTemplateView.as_view(), name='stops-template'),
+
+        url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
+        particular_bus_id,name="particular-bus"),
+
+        
 # url(r'^(?P<pk>[0-9]+)$', views.LocationsView, name='location-bus'),
 ]
 
