@@ -7,6 +7,8 @@ from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponse
 from stops.forms import StopsForm
 
+# class static_members():
+#     pass
 class StopsTemplateView(TemplateView):
     """
         Stops detail view.
@@ -33,7 +35,9 @@ class BusesDetailView(DetailView):
     model = Buses
 
 def particular_bus_id(request,vehicle_id):
-    obj = Buses.objects.filter(vehicle_id=vehicle_id)
+    obj = Buses.objects.filter(vehicle_id=vehicle_id).order_by('-timestamp')[:1]
+    # print (len(obj))
+    # print (obj[0].speed)
     #print (vehicle_id+"hello here")
     stops_points = serialize('geojson',obj)
     return HttpResponse(stops_points,content_type='json')

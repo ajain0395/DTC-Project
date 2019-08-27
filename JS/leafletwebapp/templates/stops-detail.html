@@ -6,7 +6,12 @@
         {% leaflet_css %}
     {% leaflet_js %}
     
-
+    <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+    <script src="{% static 'dist/leaflet-realtime.min.js' %}"></script>
+    <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
+    <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
+    <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
     <!-- <style>
         html, body { height: 100%; width: 99%; margin: 10; }
         div.one{
@@ -24,11 +29,11 @@
 </head>
 <body>
             <script type="text/javascript">
-            function map_points(map,options,mypara)
+           function map_points(map,options,mypara)
             {
                 //particular-bus
                 console.log(mypara)
-                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PC4105' %}",
+                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PC5470' %}",
                             //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
@@ -42,7 +47,6 @@
                     }),
                     // title: feature.properties.stop_name,
                     title: feature.properties.vehicle_id,
-
                     riseOnHover: true
                 });
             },
@@ -56,28 +60,111 @@
             }
 
 
+
             function map_init(map, options) {
+
+                // var layernew = L.layerGroup();
+                var realtime = L.realtime({
+                
+    url: "{% url 'stops:particular-bus' vehicle_id='DL1PC6760' %}",
+    // url: "{% url 'stops:all-buses' %}",
+    crossOrigin: true,
+    type: 'json'
+}, {
+    // start: true,
+    // removeMissing: true,
+    interval: 3 * 1000,
+    pointToLayer: function (feature, latlng) {
+        console.log(latlng)
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        // iconUrl: "static/img/bus_blue_point.png",
+                        iconUrl: "{% static 'img/bus_blue_point.png' %}",
+                        iconSize: [50, 54],
+                        iconAnchor: [12, 28],
+                        popupAnchor: [0, -25]
+                    }),
+                    // title: feature.properties.stop_name,
+                    title: feature.properties.vehicle_id,
+                    riseOnHover: true
+                });
+            },
+            onEachFeature: function(feature,layer){
+				// layer.bindPopup(feature.properties.stop_name.toString());
+                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
+            }
+}).addTo(map);
+// realtime.on('update', function(e) {
+//     // var coordPart = function(v, dirs) {
+//     //         return dirs.charAt(v >= 0 ? 0 : 1) +
+//     //             (Math.round(Math.abs(v) * 100) / 100).toString();
+//     //     },
+//     //     popupContent = function(fId) {
+//     //         var feature = e.features[fId],
+//     //             c = feature.geometry.coordinates;
+//     //         return 'Wander drone at ' +
+//     //             coordPart(c[1], 'NS') + ', ' + coordPart(c[0], 'EW');
+//     //     },
+//     //     bindFeaturePopup = function(fId) {
+//     //         realtime.getLayer(fId).bindPopup(popupContent(fId.properties.timestamp));
+//     //     },
+//     //     updateFeaturePopup = function(fId) {
+//     //         realtime.getLayer(fId).getPopup().setContent(popupContent(fId.properties.timestamp));
+//     //     };
+
+//     // // map.fitBounds(realtime.getBounds(), {maxZoom: 3});
+
+//     // Object.keys(e.enter).forEach(bindFeaturePopup);
+//     // Object.keys(e.update).forEach(updateFeaturePopup);
+//     // layernew.addTo(map);
+
+// });
+            //     var grnetmap = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
+			// 	attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+			// 	maxZoom: 18
+			// });
+			// var options = {center : new L.LatLng(51.44815, 5.47279), zoom : 13, layers: [grnetmap], messagebox: true };
+			// map.options.messagebox = true;
+			// console.log(map.messagebox);
+			// var messages = [ 'Lorum ipsum', 'Buy me a beer <img src="https://www.grendelman.net/wp/wp-includes/images/smilies/icon_smile.gif" />',
+			// 	'Let me google that for you', 'Multi-line<br />messages<br />are also<br />possible' ];
+			// var positions = [ 'topleft', 'topright', 'bottomleft', 'bottomright' ];
+
+			// L.control.liveupdate ({
+			// 	update_map: function () {
+			// 		// var i = Math.floor(Math.random() * messages.length);
+			// 		// var msg = messages[i];
+			// 		// var j = Math.floor(Math.random() * positions.length);
+			// 		// var pos = positions[j];
+			// 		// map.messagebox.setPosition("topleft");
+			// 		// map.options.messagebox.timeout = 6000;
+			// 		// map.messagebox.show(msg);
+			// 	},
+			// 	position: 'topleft',
+			// 	interval: 5000
+			// })
+			// .addTo(map)
+			// .startUpdating();
                 // get point lat and lon
-                var lon = "{{ stops.longitude }}";
-                var lat = "{{ stops.latitude }}";
-                // zoom to point & add it to map
-                map.setView([lat, lon], 12);
-                L.marker([lat, lon]).addTo(map);
+                // var lon = "{{ stops.longitude }}";
+                // var lat = "{{ stops.latitude }}";
+                // // zoom to point & add it to map
+                // map.setView([lat, lon], 12);
+                // L.marker([lat, lon]).addTo(map);
             }           
         </script>
     
         <h1>{{ stops.stop_name }}</h1>
         <h1>{{ buses.vehicle_id}}</h1>
 
-        {% leaflet_map "gis" callback="map_points"  %}
-        <!-- {% leaflet_map "main" callback="map_init" %} -->
+        <!-- {% leaflet_map "gis" callback="map_points"  %} -->
+        {% leaflet_map "gis" callback="map_init" %}
     <div >
-        <form method="POST">
+        <!-- <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <!-- <input type="text"> -->
             <button type="submit">Submit</button>
-        </form>
+        </form> -->
         </div>
     <!-- {% leaflet_map "main" %} -->
 </body>
