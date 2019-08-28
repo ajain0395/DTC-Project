@@ -69,38 +69,40 @@
                 // var layernew = L.layerGroup().addTo(map);
                 // var clusterGroup = L.markerClusterGroup();
                 // clusterGroup.addTo(map);
-                var realtime = L.realtime({
+// /////////////////////////realtime start//////////////////////////
+//                 var realtime = L.realtime({
                 
-    url: "{% url 'stops:particular-bus' vehicle_id='DL1PC6890' %}",
-    // url: "{% url 'stops:all-buses' %}",
-    crossOrigin: true,
-    type: 'json'
-}, {
-    // start: true,
-    // removeMissing: true,
-    // container:clusterGroup,
-    interval: 3 * 1000,
-    pointToLayer: function (feature, latlng) {
-        console.log(latlng)
-                marker =  L.marker(latlng, {
-                    icon: L.icon({
-                        // iconUrl: "static/img/bus_blue_point.png",
-                        iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                        iconSize: [50, 54],
-                        iconAnchor: [12, 28],
-                        popupAnchor: [0, -25]
-                    }),
-                    // title: feature.properties.stop_name,
-                    title: feature.properties.vehicle_id,
-                    riseOnHover: true
-                });
-                return marker;
-            },
-            onEachFeature: function(feature,layer){
-				// layer.bindPopup(feature.properties.stop_name.toString());
-                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
-            }
-}).addTo(map);
+//     url: "{% url 'stops:filtered-buses' %}",
+//     // url: "{% url 'stops:all-buses' %}",
+//     crossOrigin: true,
+//     type: 'json'
+// }, {
+//     // start: true,
+//     // removeMissing: true,
+//     // container:clusterGroup,
+//     interval: 3 * 1000,
+//     pointToLayer: function (feature, latlng) {
+//         console.log(latlng)
+//                 marker =  L.marker(latlng, {
+//                     icon: L.icon({
+//                         // iconUrl: "static/img/bus_blue_point.png",
+//                         iconUrl: "{% static 'img/bus_blue_point.png' %}",
+//                         iconSize: [50, 54],
+//                         iconAnchor: [12, 28],
+//                         popupAnchor: [0, -25]
+//                     }),
+//                     // title: feature.properties.stop_name,
+//                     title: feature.properties.vehicle_id,
+//                     riseOnHover: true
+//                 });
+//                 return marker;
+//             },
+//             onEachFeature: function(feature,layer){
+// 				// layer.bindPopup(feature.properties.stop_name.toString());
+//                 layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
+//             }
+// }).addTo(map);
+////////////////////realtime onupdate start////////////////////////////////
 // realtime.on('update', function(e) {
 //     // var coordPart = function(v, dirs) {
 //     //         return dirs.charAt(v >= 0 ? 0 : 1) +
@@ -126,38 +128,46 @@
 //     // layernew.addTo(map);
 
 // });
-            //     var grnetmap = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
-			// 	attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-			// 	maxZoom: 18
-			// });
-			// var options = {center : new L.LatLng(51.44815, 5.47279), zoom : 13, layers: [grnetmap], messagebox: true };
-			// map.options.messagebox = true;
-			// console.log(map.messagebox);
-			// var messages = [ 'Lorum ipsum', 'Buy me a beer <img src="https://www.grendelman.net/wp/wp-includes/images/smilies/icon_smile.gif" />',
-			// 	'Let me google that for you', 'Multi-line<br />messages<br />are also<br />possible' ];
-			// var positions = [ 'topleft', 'topright', 'bottomleft', 'bottomright' ];
-
-			// L.control.liveupdate ({
-			// 	update_map: function () {
-			// 		// var i = Math.floor(Math.random() * messages.length);
-			// 		// var msg = messages[i];
-			// 		// var j = Math.floor(Math.random() * positions.length);
-			// 		// var pos = positions[j];
-			// 		// map.messagebox.setPosition("topleft");
-			// 		// map.options.messagebox.timeout = 6000;
-			// 		// map.messagebox.show(msg);
-			// 	},
-			// 	position: 'topleft',
-			// 	interval: 5000
-			// })
-			// .addTo(map)
-			// .startUpdating();
-                // get point lat and lon
-                // var lon = "{{ stops.longitude }}";
-                // var lat = "{{ stops.latitude }}";
-                // // zoom to point & add it to map
-                // map.setView([lat, lon], 12);
-                // L.marker([lat, lon]).addTo(map);
+///////////////////realtime onupdate end////////////////////
+///////////////////realtime end///////////////////////////
+			L.control.liveupdate ({
+				update_map: function () {
+                    var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
+                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
+                {
+			pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon: L.icon({
+                        // iconUrl: "static/img/bus_blue_point.png",
+                        iconUrl: "{% static 'img/bus_blue_point.png' %}",
+                        iconSize: [50, 54],
+                        iconAnchor: [12, 28],
+                        popupAnchor: [0, -25]
+                    }),
+                    // title: feature.properties.stop_name,
+                    title: feature.properties.vehicle_id,
+                    riseOnHover: true
+                });
+            },
+			onEachFeature: function(feature,layer){
+				// layer.bindPopup(feature.properties.stop_name.toString());
+                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
+			}
+		});
+        datapoints.addTo(map);
+					// var i = Math.floor(Math.random() * messages.length);
+					// var msg = messages[i];
+					// var j = Math.floor(Math.random() * positions.length);
+					// var pos = positions[j];
+					// map.messagebox.setPosition("topleft");
+					// map.options.messagebox.timeout = 6000;
+					// map.messagebox.show(msg);
+				},
+				position: 'topleft',
+				interval: 5000
+			})
+			.addTo(map)
+			.startUpdating();
             }           
         </script>
     
