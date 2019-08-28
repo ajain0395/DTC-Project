@@ -1,0 +1,1 @@
+DELETE FROM stops_buses WHERE vehicle_id Like 'DL%';

@@ -8,6 +8,9 @@
     
     <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
     <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/MarkerCluster.Default.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/MarkerCluster.css' %}" />
+
     <script src="{% static 'dist/leaflet-realtime.min.js' %}"></script>
     <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
     <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
@@ -21,19 +24,19 @@
 
         </style>	-->
         <style>.leaflet-container-default {
-            height: 80%;
-            width: 80%;
+            height: 100%;
+            width: 100%;
         }</style>
         <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
 
 </head>
 <body>
             <script type="text/javascript">
-           function map_points(map,options,mypara)
+           function map_points(map,options)
             {
                 //particular-bus
-                console.log(mypara)
-                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PC5470' %}",
+                // console.log(mypara)
+                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PD2596' %}",
                             //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
@@ -63,20 +66,23 @@
 
             function map_init(map, options) {
 
-                // var layernew = L.layerGroup();
+                // var layernew = L.layerGroup().addTo(map);
+                // var clusterGroup = L.markerClusterGroup();
+                // clusterGroup.addTo(map);
                 var realtime = L.realtime({
                 
-    url: "{% url 'stops:particular-bus' vehicle_id='DL1PC6760' %}",
+    url: "{% url 'stops:particular-bus' vehicle_id='DL1PC6890' %}",
     // url: "{% url 'stops:all-buses' %}",
     crossOrigin: true,
     type: 'json'
 }, {
     // start: true,
     // removeMissing: true,
+    // container:clusterGroup,
     interval: 3 * 1000,
     pointToLayer: function (feature, latlng) {
         console.log(latlng)
-                return L.marker(latlng, {
+                marker =  L.marker(latlng, {
                     icon: L.icon({
                         // iconUrl: "static/img/bus_blue_point.png",
                         iconUrl: "{% static 'img/bus_blue_point.png' %}",
@@ -88,6 +94,7 @@
                     title: feature.properties.vehicle_id,
                     riseOnHover: true
                 });
+                return marker;
             },
             onEachFeature: function(feature,layer){
 				// layer.bindPopup(feature.properties.stop_name.toString());
