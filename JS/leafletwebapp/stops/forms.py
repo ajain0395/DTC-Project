@@ -12,7 +12,7 @@ class MyForm(forms.Form):
     queryset = Buses.objects.distinct('vehicle_id').filter(timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).values('vehicle_id')
     # print (str(queryset.query))
     vehicles = []
-    vehicles.append(('-----','-----'))
+    vehicles.append(('---------','---------'))
     # queryset = queryset.order_by('-timestamp')
     for i in queryset:
         vehicles.append((i['vehicle_id'],i['vehicle_id']))
@@ -20,5 +20,5 @@ class MyForm(forms.Form):
     # print (vehicles)
     # vehicles = vehicles.reverse()
     name = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,widget=Select2Multiple(
-            select2attrs={'width': '100%'}
+            select2attrs={'width': '200px'}
         ))
