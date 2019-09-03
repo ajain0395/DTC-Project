@@ -2,7 +2,7 @@
         {% load leaflet_tags %}
         {% load static %}
 <head>
-
+    <meta charset="UTF-8">   
         {% leaflet_css %}
     {% leaflet_js %}
     
@@ -24,7 +24,7 @@
 
         </style>	-->
         <style>.leaflet-container-default {
-            height: 100%;
+            height: 80%;
             width: 100%;
         }</style>
         <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
@@ -176,13 +176,12 @@
 
         <!-- {% leaflet_map "gis" callback="map_points"  %} -->
         {% leaflet_map "gis" callback="map_init" %}
-    <div >
-        <!-- <form method="POST">
+   
+        <form action="/" method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
-        </form> -->
-        </div>
+            {{ form.as_ul}}
+            <input type="submit" value="Submit">
+        </form>
     <!-- {% leaflet_map "main" %} -->
 </body>
 </html>

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'stops.apps.StopsConfig',
     'leaflet',
+    'easy_select2',
 
 ]
 

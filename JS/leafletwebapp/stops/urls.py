@@ -1,6 +1,7 @@
 from django.conf.urls import url
+from django.views.generic import TemplateView
 from .views import (AllStops,StopsDetailView,StopsTemplateView,AllBuses,BusesDetailView,
-particular_bus_id,particular_bus_id,add_bus_to_list,particular_buses_multiple)
+particular_bus_id,particular_bus_id,add_bus_to_list,particular_buses_multiple,HomePageView)
 
 app_name = 'stops'
 
@@ -18,8 +19,11 @@ urlpatterns = [
         url(r'^allbuses/$',
         AllBuses,name="all-buses"),
 
-        url(r'^$',
-        StopsTemplateView.as_view(), name='stops-template'),
+        # url(r'^$',
+        # StopsTemplateView.as_view(), name='stops-template'),
+
+        url(r'^$',HomePageView.as_view()),
+        # url(r'^$',TemplateView.as_view(template_name = 'stops-detail.html')),
 
         url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
         particular_bus_id,name="particular-bus"),
