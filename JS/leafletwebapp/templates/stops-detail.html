@@ -15,14 +15,6 @@
     <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
     <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
     <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
-    <!-- <style>
-        html, body { height: 100%; width: 99%; margin: 10; }
-        div.one{
-            height: 100%;
-            width: 100% 
-        }
-
-        </style>	-->
         <style>.leaflet-container-default {
             height: 80%;
             width: 100%;
@@ -65,71 +57,6 @@
 
 
             function map_init(map, options) {
-
-                // var layernew = L.layerGroup().addTo(map);
-                // var clusterGroup = L.markerClusterGroup();
-                // clusterGroup.addTo(map);
-// /////////////////////////realtime start//////////////////////////
-//                 var realtime = L.realtime({
-                
-//     url: "{% url 'stops:filtered-buses' %}",
-//     // url: "{% url 'stops:all-buses' %}",
-//     crossOrigin: true,
-//     type: 'json'
-// }, {
-//     // start: true,
-//     // removeMissing: true,
-//     // container:clusterGroup,
-//     interval: 3 * 1000,
-//     pointToLayer: function (feature, latlng) {
-//         console.log(latlng)
-//                 marker =  L.marker(latlng, {
-//                     icon: L.icon({
-//                         // iconUrl: "static/img/bus_blue_point.png",
-//                         iconUrl: "{% static 'img/bus_blue_point.png' %}",
-//                         iconSize: [50, 54],
-//                         iconAnchor: [12, 28],
-//                         popupAnchor: [0, -25]
-//                     }),
-//                     // title: feature.properties.stop_name,
-//                     title: feature.properties.vehicle_id,
-//                     riseOnHover: true
-//                 });
-//                 return marker;
-//             },
-//             onEachFeature: function(feature,layer){
-// 				// layer.bindPopup(feature.properties.stop_name.toString());
-//                 layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
-//             }
-// }).addTo(map);
-////////////////////realtime onupdate start////////////////////////////////
-// realtime.on('update', function(e) {
-//     // var coordPart = function(v, dirs) {
-//     //         return dirs.charAt(v >= 0 ? 0 : 1) +
-//     //             (Math.round(Math.abs(v) * 100) / 100).toString();
-//     //     },
-//     //     popupContent = function(fId) {
-//     //         var feature = e.features[fId],
-//     //             c = feature.geometry.coordinates;
-//     //         return 'Wander drone at ' +
-//     //             coordPart(c[1], 'NS') + ', ' + coordPart(c[0], 'EW');
-//     //     },
-//     //     bindFeaturePopup = function(fId) {
-//     //         realtime.getLayer(fId).bindPopup(popupContent(fId.properties.timestamp));
-//     //     },
-//     //     updateFeaturePopup = function(fId) {
-//     //         realtime.getLayer(fId).getPopup().setContent(popupContent(fId.properties.timestamp));
-//     //     };
-
-//     // // map.fitBounds(realtime.getBounds(), {maxZoom: 3});
-
-//     // Object.keys(e.enter).forEach(bindFeaturePopup);
-//     // Object.keys(e.update).forEach(updateFeaturePopup);
-//     // layernew.addTo(map);
-
-// });
-///////////////////realtime onupdate end////////////////////
-///////////////////realtime end///////////////////////////
 			L.control.liveupdate ({
 				update_map: function () {
                     var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
@@ -155,13 +82,7 @@
 			}
 		});
         datapoints.addTo(map);
-					// var i = Math.floor(Math.random() * messages.length);
-					// var msg = messages[i];
-					// var j = Math.floor(Math.random() * positions.length);
-					// var pos = positions[j];
-					// map.messagebox.setPosition("topleft");
-					// map.options.messagebox.timeout = 6000;
-					// map.messagebox.show(msg);
+					
 				},
 				position: 'topleft',
 				interval: 5000
@@ -170,18 +91,19 @@
 			.startUpdating();
             }           
         </script>
-    
+    <nav>
         <h1>{{ stops.stop_name }}</h1>
         <h1>{{ buses.vehicle_id}}</h1>
 
         <!-- {% leaflet_map "gis" callback="map_points"  %} -->
         {% leaflet_map "gis" callback="map_init" %}
-   
-        <form action="/" method="post">
+    </nav>
+   <nav>     <form action="/" method="post">
             {% csrf_token %}
             {{ form.as_ul}}
             <input type="submit" value="Submit">
         </form>
+    </nav>
     <!-- {% leaflet_map "main" %} -->
 </body>
 </html>

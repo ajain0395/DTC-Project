@@ -102,9 +102,6 @@ def AllBuses(request):
     buses_points = serialize('geojson',Buses.objects.all())
     return HttpResponse(buses_points,content_type='json')
 
-# def getspecificbus(request,vehicle_id):
-#     queryset = serialize('geojson',Buses.objects.filter(vehicle_id=vehicle_id))
-#     return HttpResponse(buses_points,content_type='json')
 
 from stops.forms import MyForm
 from django.template import loader
@@ -136,35 +133,3 @@ class HomePageView(TemplateView):
             filterBusesobj.vehicle_id = clean_vehicle_id
             
         return render(request, self.template_name, {"form": form})
-
-
-# def responseform(request):
-#      print ("clicked")
-
-#      if request.method == 'POST':
-        
-#         myForm = MyForm(request.POST)
-
-#         if myForm.is_valid():
-#             name = myForm.cleaned_data['name']
-#             email = myForm.cleaned_data['email']
-#             feedback = myForm.cleaned_data['feedback']
-
-#             context = {
-#             'name': name,
-#             'email': email,
-#             'feedback': feedbackq1
-#             }
-
-#             template = loader.get_template('stops-detail.html')
-
-#             #returing the template
-#             return HttpResponse(template.render(context, request))
-
-
-
-#      else:
-#          form = MyForm()
-#      #returning form
-
-#      return render(request, 'stops-detail.html', RequestContext(request))
