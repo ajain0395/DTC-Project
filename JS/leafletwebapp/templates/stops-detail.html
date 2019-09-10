@@ -3,18 +3,25 @@
         {% load static %}
 <head>
     <meta charset="UTF-8">   
-        {% leaflet_css %}
+    
+       
+    
+
+    {% leaflet_css %}
     {% leaflet_js %}
     
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/style.css' %}"/>
     <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
     <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
     <link rel="stylesheet" href="{% static 'dist/MarkerCluster.Default.css' %}" />
     <link rel="stylesheet" href="{% static 'dist/MarkerCluster.css' %}" />
+    
 
     <script src="{% static 'dist/leaflet-realtime.min.js' %}"></script>
     <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
     <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
     <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+
         <style>.leaflet-container-default {
             height: 80%;
             width: 100%;
@@ -23,6 +30,7 @@
 
 </head>
 <body>
+        
             <script type="text/javascript">
            function map_points(map,options)
             {
@@ -91,19 +99,31 @@
 			.startUpdating();
             }           
         </script>
-    <nav>
-        <h1>{{ stops.stop_name }}</h1>
-        <h1>{{ buses.vehicle_id}}</h1>
+    
+    <div id="upright">
+        <!-- <h1>{{ stops.stop_name }}</h1>
+        <h1>{{ buses.vehicle_id}}</h1> -->
 
         <!-- {% leaflet_map "gis" callback="map_points"  %} -->
         {% leaflet_map "gis" callback="map_init" %}
-    </nav>
-   <nav>     <form action="/" method="post">
+        <div id="below">
+                <input type="text" placeholder="Enter Query here" width="100%" height="100%">
+            </input>
+             </div>
+    </div>
+   
+    <div id="upleft">    
+        <form action="/" method="post" >
             {% csrf_token %}
             {{ form.as_ul}}
             <input type="submit" value="Submit">
         </form>
-    </nav>
+      
+    </div>
+   
+    
+
+
     <!-- {% leaflet_map "main" %} -->
 </body>
 </html>
