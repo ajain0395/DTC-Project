@@ -8,6 +8,7 @@
     
 
     {% leaflet_css %}
+    {{ form.media.css }}
     {% leaflet_js %}
     
     <link rel="stylesheet" type="text/css" href="{% static 'dist/style.css' %}"/>
@@ -30,7 +31,8 @@
 
 </head>
 <body>
-        
+    {{form.media.js}}
+
             <script type="text/javascript">
            function map_points(map,options)
             {
@@ -107,12 +109,14 @@
         <!-- {% leaflet_map "gis" callback="map_points"  %} -->
         {% leaflet_map "gis" callback="map_init" %}
         <div id="below">
-                <input type="text" placeholder="Enter Query here" width="100%" height="100%">
-            </input>
+            <textarea id='classic'></textarea>
+                <!-- <input type="textarea" placeholder="Enter Query here" width="100%" id="classic" height="100%"> -->
+                <input type="submit" value="Submit">
              </div>
     </div>
    
-    <div id="upleft">    
+    <div id="upleft">  
+          
         <form action="/" method="post" >
             {% csrf_token %}
             {{ form.as_ul}}
@@ -121,8 +125,6 @@
       
     </div>
    
-    
-
 
     <!-- {% leaflet_map "main" %} -->
 </body>

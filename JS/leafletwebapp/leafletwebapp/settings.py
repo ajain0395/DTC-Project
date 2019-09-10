@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'stops.apps.StopsConfig',
     'leaflet',
     'easy_select2',
+    'django_select2',
 
 ]
 

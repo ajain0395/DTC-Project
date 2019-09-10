@@ -28,5 +28,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^', include('stops.urls')),
+    url(r'^select2/', include('django_select2.urls')),
     url('admin/', admin.site.urls),
 ]
