@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'dtcdb',
         'USER': 'dtc',
         'PASSWORD': 'dtc',
-        'HOST': 'localhost',
+        'HOST': '192.168.18.221',
         'PORT': '',
     }
 }
