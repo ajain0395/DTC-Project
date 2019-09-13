@@ -111,16 +111,16 @@
         <div id="below">
             <textarea id='classic'></textarea>
                 <!-- <input type="textarea" placeholder="Enter Query here" width="100%" id="classic" height="100%"> -->
-                <input type="submit" value="Submit">
+                <input type="submit" value="Execute">
              </div>
     </div>
    
     <div id="upleft">  
-          
+
         <form action="/" method="post" >
             {% csrf_token %}
             {{ form.as_ul}}
-            <input type="submit" value="Submit">
+            <input type="submit" value="Filter">
         </form>
       
     </div>
