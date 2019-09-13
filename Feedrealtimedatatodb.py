@@ -2,7 +2,7 @@ import psycopg2
 # from geoalchemy2 import Geometry, WKTElement
 from sqlalchemy import *
 import pandas as pd
-import geopandas as gpd
+#import geopandas as gpd
 from sqlalchemy import *
 from geoalchemy2 import Geometry
 #Necessary header files
@@ -17,7 +17,7 @@ import datetime
 import time
 
 
-sleepTime = 10	      #Time to wait for next iteration
+sleepTime = 8	      #Time to wait for next iteration
 fileName = 'dummy.csv'             #Name of the filename to save as csv
 key='6uwbqTNiek5jYJKFAev0DZgH5LdeqXAR'          #Key fortransit website
 apiurl = 'https://otd.delhi.gov.in/api/realtime/VehiclePositions.pb?key='
