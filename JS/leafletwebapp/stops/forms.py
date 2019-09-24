@@ -5,6 +5,12 @@ from .models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from .views import filterBusesobj
+from django_select2.forms import (
+    HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
+    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+    Select2Widget
+)
+
 class MyForm(forms.Form):
 #  name = forms.CharField(label='Enter your name', max_length=100)
 #  email = forms.EmailField(label='Enter your email', max_length=100)
@@ -19,6 +25,4 @@ class MyForm(forms.Form):
     # print (queryset.values())
     # print (vehicles)
     # vehicles = vehicles.reverse()
-    name = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,widget=Select2Multiple(
-            select2attrs={'width': '200px'}
-        ))
+    name = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,widget=Select2Multiple)
