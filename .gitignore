@@ -30,6 +30,7 @@ Delhi/data/GTFS.zip
 JS/leafletwebapp/buses/migrations/*
 JS/leafletwebapp/stops/migrations/*
 JS/leafletwebapp/.vscode/*
+newcollecteddata/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
