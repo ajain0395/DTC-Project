@@ -3,12 +3,11 @@ import psycopg2
 # from geoalchemy2 import Geometry, WKTElement
 from sqlalchemy import *
 import pandas as pd
-import geopandas as gpd
 from sqlalchemy import *
 from geoalchemy2 import Geometry
 def insert_to_buses(X):
     try:
-        connection = psycopg2.connect(host='localhost', dbname='dtcdb',   user='dtc', password='dtc')
+        connection = psycopg2.connect(host='192.168.18.221', dbname='dtcdb',   user='dtc', password='dtc')
         connection.autocommit=False
         sql = "INSERT INTO stops_buses (vehicle_id, trip_id, route_id, latitude, longitude, speed,timestamp, geometry)         VALUES (%s,%s,%s,%s,%s,%s,to_timestamp(%s,'yyyy-mm-dd hh24:mi:ss'), ST_SetSRID(ST_MakePoint(%s, %s), 4326))"
         with connection.cursor() as cur:
