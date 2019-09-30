@@ -23,6 +23,7 @@
     <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
     <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
 
+
         <style>.leaflet-container-default {
             height: 80%;
             width: 100%;
@@ -115,12 +116,16 @@
              </div>
     </div>
    
+
     <div id="upleft">  
+
+        <button type="submit"  onclick="location.href='{% url 'stops:gotoPlayback' %}'" >PlayBack</button>
 
         <form action="/" method="post" >
             {% csrf_token %}
             {{ form.as_ul}}
             <input type="submit" value="Filter">
+            
         </form>
       
     </div>

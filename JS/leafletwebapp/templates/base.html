@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <meta charset="UTF-8">   
+            <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+    
+            {% load leaflet_tags %}
+            {% load static %}
+            {% leaflet_css %}
+            {{ form.media.css }}
+            {% leaflet_js %}
+            {% load staticfiles%}
+            {{form.media.js}}
+
+            <link rel="stylesheet" type="text/css" href="{% static 'dist/style.css' %}"/>
+            <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
+            <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+            <link rel="stylesheet" href="{% static 'dist/MarkerCluster.Default.css' %}" />
+            <link rel="stylesheet" href="{% static 'dist/MarkerCluster.css' %}" />
+            
+        
+            <script src="{% static 'dist/leaflet-realtime.min.js' %}"></script>
+            <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
+            <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
+            <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+            <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
+
+
+
+            <style>.leaflet-container-default {
+                height: 80%;
+                width: 100%;
+            }</style>
+
+       
+    </head>
+    <body>
+
+            <div>
+                    <div class="container-fluid" style=" height: 10%; background-color: darkblue"></div>
+                        <h1 style="text-indent: 15cm"><font color="white">DTC Buses Portal</font></h1>  
+                    </div>        
+                </div>
+        
+    {% block body %}
+    {% endblock %}
+    
+    </body>
+</html>
