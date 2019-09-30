@@ -4,6 +4,7 @@ from .models import Stops
 from .models import Buses
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.db.models.query import QuerySet
 
 from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponse
@@ -56,19 +57,17 @@ def print_filters():
 
 def particular_buses_multiple(request):
     print_filters()
-    if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.filter_field == 'vehicle_id'):
-        filtered_buses = Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[0],
-        timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries]
-        for i in range(1,len(filterBusesobj.vehicle_id)):
+    filtered_buses = Buses.objects.none()
+    if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
+        for i in range(0,len(filterBusesobj.vehicle_id)):
             filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
         timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
 
-    elif(len(filterBusesobj.route_id) > 0 and filterBusesobj.filter_field == 'route_id'):
-        filtered_buses = Buses.objects.filter(vehicle_id__in=filterBusesobj.vehicle_id,
-        timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries]
+    if(len(filterBusesobj.route_id) > 0 and filterBusesobj.route_id[0] != -1):
+        for i in range(0,len(filterBusesobj.route_id)):
+            filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=filterBusesobj.route_id[i],
+        timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
 
-    else:
-        filtered_buses = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:50]
     buses_points = serialize('geojson',filtered_buses)
     return HttpResponse(buses_points,content_type='json')
 
@@ -103,7 +102,7 @@ def AllBuses(request):
     return HttpResponse(buses_points,content_type='json')
 
 
-from stops.forms import MyForm
+from stops.forms import RVForm
 from django.template import loader
 from django.template import RequestContext
 # Create your views here.
@@ -113,23 +112,28 @@ class HomePageView(TemplateView):
 
     def get(self, request, **kwargs):
         print("inside get")
-        form = MyForm()
+        form = RVForm()
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, **kwargs):
         print("inside get")
-        form = MyForm(request.POST)
+        form = RVForm(request.POST)
         if form.is_valid():
             # vehicle_ids = form.cleaned_data['vehicle_id']
-            asd =  form.cleaned_data['name']
-            filterBusesobj.filter_field="vehicle_id"
-            clean_vehicle_id = asd
+            clean_vehicle_id =  form.cleaned_data['vehicle_id_f']
+            clean_route_id = form.cleaned_data['route_id_f']
+
+            # if(len(clean_route_id) == 1 and )
+
+            # filterBusesobj.filter_field="vehicle_id"
+            # clean_vehicle_id = asd
             print (clean_vehicle_id)
-            print (asd)
+            # print (asd)
             # for i in asd.values():
             #     print (i['vehicle_id'])
             # for i in asd:
             #     print (i.vehicle_id)
             filterBusesobj.vehicle_id = clean_vehicle_id
+            filterBusesobj.route_id = clean_route_id
             
         return render(request, self.template_name, {"form": form})
