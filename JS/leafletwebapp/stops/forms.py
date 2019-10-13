@@ -33,5 +33,7 @@ class RVForm(forms.Form):
     # print (queryset.values())
     # print (vehicles)
     # vehicles = vehicles.reverse()
-    vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,widget=Select2Multiple,initial=vehicles[0])
-    route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
+    vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,
+     widget=Select2Multiple(select2attrs={'width': 'auto'}),initial=vehicles[0])
+    route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,
+     widget=Select2Multiple(select2attrs={'width': 'auto'}),initial=routes[0])

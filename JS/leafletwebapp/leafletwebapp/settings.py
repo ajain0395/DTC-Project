@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'stops.apps.StopsConfig',
     'leaflet',
     'easy_select2',
-    'django_select2',
 
 ]
 
@@ -90,8 +89,9 @@ DATABASES = {
         'NAME': 'dtcdb',
         'USER': 'dtc',
         'PASSWORD': 'dtc',
-        'HOST': '192.168.18.221',
-        'PORT': '',
+        'HOST': 'localhost',
+        # 'HOST': '192.168.18.221',
+        'PORT': '5432',
     }
 }
 
