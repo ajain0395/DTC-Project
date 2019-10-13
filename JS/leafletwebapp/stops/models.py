@@ -23,7 +23,7 @@ class Stops(models.Model):
 
 class Buses(models.Model):
     
-    trip_id = models.IntegerField(blank=True)
+    trip_id = models.CharField(max_length=100, blank=False)
     route_id = models.IntegerField(blank=True)
     geometry = geomodels.PointField(srid=4326,blank=True)
     latitude = models.FloatField(blank=True,default=0.0)

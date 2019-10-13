@@ -109,6 +109,7 @@ from django.template import RequestContext
 
 class HomePageView(TemplateView):
     template_name = "stops-detail.html"
+    form = RVForm()
 
     def get(self, request, **kwargs):
         print("inside get")
@@ -116,7 +117,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, **kwargs):
-        print("inside get")
+        print("inside post")
         form = RVForm(request.POST)
         if form.is_valid():
             # vehicle_ids = form.cleaned_data['vehicle_id']
@@ -135,5 +136,7 @@ class HomePageView(TemplateView):
             #     print (i.vehicle_id)
             filterBusesobj.vehicle_id = clean_vehicle_id
             filterBusesobj.route_id = clean_route_id
+        else:
+            form = RVForm()
             
         return render(request, self.template_name, {"form": form})
