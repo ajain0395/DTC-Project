@@ -1,110 +1,55 @@
-{% extends 'base.html' %}
-{% load staticfiles%}
-{% load leaflet_tags %}
-{% load static %}
-{% leaflet_css %}
-{{ form.media.css }}
-{% leaflet_js %}
-{% load staticfiles%}
-{{form.media.js}}
+<html>
+        {% load leaflet_tags %}
+        {% load static %}
+<head>
+    <meta charset="UTF-8">   
+    
+    <title>DTC Bus Monitor Portal</title>
+    
+
+    {% leaflet_css %}
+    {{ form.media.css }}
+    {% leaflet_js %}
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'dist/playbackStyle.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/MarkerCluster.Default.css' %}" />
+    <link rel="stylesheet" href="{% static 'dist/MarkerCluster.css' %}" />
+    
+
+    <script src="{% static 'dist/leaflet-realtime.min.js' %}"></script>
+    <script src="{% static 'dist/leaflet-realtime.js' %}"></script>
+    <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
+    <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
+
+</head>
 
 
-{% block body %}
-
-
-<script type="text/javascript">
-    function map_points(map,options)
-     {
-         //particular-bus
-         // console.log(mypara)
-         var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PD2596' %}",
-                     //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
-         {
-     pointToLayer: function (feature, latlng) {
-         return L.marker(latlng, {
-             icon: L.icon({
-                 // iconUrl: "static/img/bus_blue_point.png",
-                 iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                 iconSize: [24, 28],
-                 iconAnchor: [12, 28],
-                 popupAnchor: [0, -25]
-             }),
-             // title: feature.properties.stop_name,
-             title: feature.properties.vehicle_id,
-             riseOnHover: true
-         });
-     },
-     onEachFeature: function(feature,layer){
-         // layer.bindPopup(feature.properties.stop_name.toString());
-         layer.bindPopup(feature.properties.vehicle_id.toString());
-     }
- });
- //datasets.addTo(map);
- datapoints.addTo(map);
-     }
-
-
-
-     function map_init(map, options) {
-     L.control.liveupdate ({
-         update_map: function () {
-             var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
-                     //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
-         {
-     pointToLayer: function (feature, latlng) {
-         return L.marker(latlng, {
-             icon: L.icon({
-                 // iconUrl: "static/img/bus_blue_point.png",
-                 iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                 iconSize: [50, 54],
-                 iconAnchor: [12, 28],
-                 popupAnchor: [0, -25]
-             }),
-             // title: feature.properties.stop_name,
-             title: feature.properties.vehicle_id,
-             riseOnHover: true
-         });
-     },
-     onEachFeature: function(feature,layer){
-         // layer.bindPopup(feature.properties.stop_name.toString());
-         layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() + "<br>"+"Speed: " + feature.properties.speed.toString());
-     }
- });
- datapoints.addTo(map);
-             
-         },
-         position: 'topleft',
-         interval: 5000
-     })
-     .addTo(map)
-     .startUpdating();
-     }           
- </script>
- 
-
-
+<body>
+    {{form.media.js}}
     <div id="upright">
-        <!-- <h1>{{ stops.stop_name }}</h1>
-        <h1>{{ buses.vehicle_id}}</h1> -->
+      
 
         <!-- {% leaflet_map "gis" callback="map_points"  %} -->
-        {% leaflet_map "gis" callback="map_init" %}
-        <div id="below">
-            <textarea id='classic'></textarea>
-                <!-- <input type="textarea" placeholder="Enter Query here" width="100%" id="classic" height="100%"> -->
-                <input type="submit" value="Execute">
-             </div>
+        {% leaflet_map "gis" %}
+       
     </div>
    
+
     <div id="upleft">  
 
         <form action="/" method="post" >
             {% csrf_token %}
-            {{ form.as_ul}}
+            {{ formp.as_ul}}
             <input type="submit" value="Filter">
+            
         </form>
       
     </div>
    
 
-{% endblock %}
+   
+</body>
+</html>
