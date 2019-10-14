@@ -35,7 +35,7 @@ urlpatterns = [
         url(r'^filtered_buses/$',
         particular_buses_multiple,name="filtered-buses"),
 
-        url(r'^gotoPlayback/$', TemplateView.as_view(template_name='playback.html'), name="gotoPlayback"),
+        # url(r'^gotoPlayback/$', TemplateView.as_view(template_name='playback.html'), name="gotoPlayback"),
         
 # url(r'^(?P<pk>[0-9]+)$', views.LocationsView, name='location-bus'),
 ]
