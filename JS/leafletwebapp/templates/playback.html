@@ -31,40 +31,139 @@
     {{form.media.js}}
 
     <script type="text/javascript">
+           allicons = [new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+//   iconSize: [25, 41],
+//   iconAnchor: [12, 41],
+//   popupAnchor: [1, -34],
+//   shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+}),
+new L.Icon({
+  iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+})
+]
+    function getnewicon()
+    { if( typeof getnewicon.counter == 'undefined' ) {
+        getnewicon.counter = -1;
+    }
+    getnewicon.counter++
+            return allicons[6];
+    }
         function map_points(map,options)
          {
-             //particular-bus
-             // console.log(mypara)
-             var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
-                         //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
-             {
-         pointToLayer: function (feature, latlng) {
-             return L.marker(latlng, {
-                 icon: L.icon({
-                     // iconUrl: "static/img/bus_blue_point.png",
-                     iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                     iconSize: [24, 28],
-                     iconAnchor: [12, 28],
-                     popupAnchor: [0, -25]
-                 }),
-                 // title: feature.properties.stop_name,
-                 title: feature.properties.vehicle_id,
-                 riseOnHover: true
-             });
-         },
-         onEachFeature: function(feature,layer){
-             // layer.bindPopup(feature.properties.stop_name.toString());
-             layer.bindPopup(feature.properties.vehicle_id.toString());
-         }
-     });
-     //datasets.addTo(map);
-     
-     datapoints.addTo(map);
-    }
+            var heading = document.getElementById("p1");
+            var timeelapsed = 0;
+            // heading.innerHTML = timeelapsed;
+           // var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}");
+                var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
+                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
+                {
+			pointToLayer: function (feature, latlng) {
+                return L.marker(latlng, {
+                    icon:getnewicon(),
+//                     icon: function (options) {
+//                         i = i+1;
+// 	return allicons[i%8];
+// },
+                    // icon: L.icon({
+                    //     markerColor: 'green'
+
+                    //     // iconUrl: "static/img/bus_blue_point.png",
+                    //     // iconUrl: "{% static 'img/bus_blue_point.png' %}",
+                    //     // iconSize: [50, 54],
+                    //     // iconAnchor: [12, 28],
+                    //     // popupAnchor: [0, -25]
+                    // }),
+
+                    // title: feature.properties.stop_name,
+                    title: feature.properties.vehicle_id,
+                    riseOnHover: true
+                });
+            },
+			onEachFeature: function(feature,layer){
+				// layer.bindPopup(feature.properties.stop_name.toString());
+                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
+                 "<br>"+"Speed: " + feature.properties.speed.toString() +
+                 "<br>"+"Route id: " + feature.properties.route_id.toString()
+                 );
+			}
+		});
+        // alert(datapoints.length);
+        datapoints.addTo(map);
+
+			L.control.liveupdate ({
+				update_map: function () {
+        // datapoints.addTo(map);
+        // datapoints.addUrl("{% url 'playback:filtered-routes' %}");
+        timeelapsed = timeelapsed + 10;
+        datapoints.refresh("{% url 'playback:filtered-routes' %}");
+        heading.innerHTML = timeelapsed + " Seconds";
+					
+				},
+				position: 'topleft',
+				interval: 2000
+			})
+			.addTo(map).stopUpdating();
+            }        
     
     </script> 
 
     <div id="upright">
+            <h1 id="p1"></h1>
       
 
         {% leaflet_map "gis" callback="map_points"  %}

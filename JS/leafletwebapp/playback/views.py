@@ -14,13 +14,22 @@ from django.template import RequestContext
 
 class BusFilter:
     time = 15
-    speed = ""
+    speed = 1
     startDate = ""
     endDate= ""
     route_id = ""
 
 
 filterObj = BusFilter()
+
+
+
+##########################################################33
+#  if(len(filterBusesobj.route_id) > 0 and filterBusesobj.route_id[0] != -1):
+#         for i in range(0,len(filterBusesobj.route_id)):
+#             filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=filterBusesobj.route_id[i],
+#         timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+###############################################################
 
 def particular_buses_multiple(request):
     filtered_routes = Buses.objects.none()
@@ -29,14 +38,19 @@ def particular_buses_multiple(request):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
     #     timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
 
-    if(len(filterObj.route_id) > 0 and filterObj.route_id[0] != -1):
-        for i in range(0,len(filterObj.route_id)):
-            filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],
-        timestamp__gte=filterObj.startDate,timestamp__lte=filterObj.endDate).order_by('vehicle_id','-timestamp'))
-    
-    print("filterrrrrrrrrr "+str(filtered_routes))
+    if(filterObj.startDate < filterObj.endDate):
+        if(len(filterObj.route_id) > 0 and filterObj.route_id[0] != -1):
+            for i in range(0,len(filterObj.route_id)):
+                filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],
+            timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
+    # print("filterrrrrrrrrr "+str(filtered_routes))
 
     buses_points = serialize('geojson',filtered_routes)
+    filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
+    print (filterObj.startDate)
+    # filterObj.startDate = ""
+    # filterObj.endDate = ""
+    # filterObj.route_id = ""
     return HttpResponse(buses_points,content_type='json')
 
 
