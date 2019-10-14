@@ -14,14 +14,14 @@ from django_select2.forms import (
 )
 
 class MyForm(forms.Form):
-    queryset_route = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=15))).order_by('route_id','timestamp').distinct('route_id').values('route_id')
+    queryset_route = Buses.objects.order_by('route_id','timestamp').distinct('route_id').values('route_id')
     routes = []
     routes.append((-1,'---------'))
 
     #startDate = DateTimeField(widget=forms.SelectDateWidget())
     #startTime = DateTimeWidget(usel10n=True)
-    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': '%Y-%m-%d %H:%M:%S'}))
-    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': '%Y-%m-%d %H:%M:%S'}))
+    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
+    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'Y-mm-dd HH:MM:SS'}))
     #print(startDateTime)
     for i in queryset_route:
         routes.append((i['route_id'],i['route_id']))

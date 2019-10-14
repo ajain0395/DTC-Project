@@ -7,6 +7,7 @@ from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
 from datetime import timedelta
+from django.utils.dateparse import parse_datetime
 from .forms import MyForm
 from django.template import loader
 from django.template import RequestContext
@@ -22,7 +23,7 @@ class BusFilter:
 filterObj = BusFilter()
 
 def particular_buses_multiple(request):
-    filtered_buses = Buses.objects.none()
+    filtered_routes = Buses.objects.none()
     # if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
     #     for i in range(0,len(filterBusesobj.vehicle_id)):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
@@ -30,11 +31,14 @@ def particular_buses_multiple(request):
 
     if(len(filterObj.route_id) > 0 and filterObj.route_id[0] != -1):
         for i in range(0,len(filterObj.route_id)):
-            filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=filterObj.route_id[i],
-        timestamp__gte=(timezone.now()-timedelta(minutes=filterObj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+            filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],
+        timestamp__gte=filterObj.startDate,timestamp__lte=filterObj.endDate).order_by('vehicle_id','-timestamp'))
+    
+    print("filterrrrrrrrrr "+str(filtered_routes))
 
-    buses_points = serialize('geojson',filtered_buses)
+    buses_points = serialize('geojson',filtered_routes)
     return HttpResponse(buses_points,content_type='json')
+
 
 def appendTimeZone(playTime):
     timeList = playTime.split('+')
@@ -60,9 +64,12 @@ class playBackView(DetailView):
             startDateTime = form.cleaned_data['startDateTime']
             endDateTime = form.cleaned_data['endDateTime']
             
-            cleanStartDateTime = appendTimeZone(str(startDateTime))
-            cleanEndDateTime = appendTimeZone(str(endDateTime))
+            #print("beforeeeeeeeeeeee ty "+str(type(startDateTime)))
+            cleanStartDateTime = parse_datetime(appendTimeZone(str(startDateTime)))
+            cleanEndDateTime = parse_datetime(appendTimeZone(str(endDateTime)))
+            #print("afterrrrrrrrrrrrrrrr ty "+str(type(cleanStartDateTime)))
             #print("new start and end time "+cleanStartDateTime+"\t"+cleanEndDateTime)
+            
             filterObj.route_id = clean_route_id
             filterObj.startDate = cleanStartDateTime
             filterObj.endDate = cleanEndDateTime
