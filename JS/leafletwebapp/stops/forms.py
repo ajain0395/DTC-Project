@@ -5,11 +5,11 @@ from .models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from .views import filterBusesobj
-from django_select2.forms import (
-    HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
-    ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-    Select2Widget
-)
+# from django_select2.forms import (
+#     HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
+#     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
+#     Select2Widget
+# )
 
 class RVForm(forms.Form):
 #  name = forms.CharField(label='Enter your name', max_length=100)
@@ -25,7 +25,7 @@ class RVForm(forms.Form):
     routes = []
     routes.append((-1,'---------'))
     # queryset = queryset.order_by('-timestamp')
-    print ('NewForm')
+    # print ('NewForm')
     for i in queryset_vehicle:
         vehicles.append((i['vehicle_id'],i['vehicle_id']))
     for i in queryset_route:
@@ -34,6 +34,8 @@ class RVForm(forms.Form):
     # print (vehicles)
     # vehicles = vehicles.reverse()
     vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=vehicles,
-     widget=Select2Multiple(select2attrs={'width': 'auto'}),initial=vehicles[0])
+    #  widget=Select2Multiple(select2attrs={'width': 'auto'}),
+     initial=vehicles[0])
     route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,
-     widget=Select2Multiple(select2attrs={'width': 'auto'}),initial=routes[0])
+    #  widget=Select2Multiple(select2attrs={'width': 'auto'}),
+     initial=routes[0])

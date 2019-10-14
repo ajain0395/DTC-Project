@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
+    'jquery',
     'stops.apps.StopsConfig',
     'leaflet',
     'easy_select2',
@@ -89,8 +90,8 @@ DATABASES = {
         'NAME': 'dtcdb',
         'USER': 'dtc',
         'PASSWORD': 'dtc',
-        'HOST': 'localhost',
-        # 'HOST': '192.168.18.221',
+        # 'HOST': 'localhost',
+        'HOST': '192.168.18.221',
         'PORT': '5432',
     }
 }
@@ -133,6 +134,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+SELECT2_JS = '/static/easy_select2/vendor/select2/js/select2.min.js'
+SELECT2_CSS = '/static/easy_select2/vendor/select2/css/select2.min.css'
 
 STATICFILES_DIRS =(
     os.path.join(BASE_DIR,'static'),

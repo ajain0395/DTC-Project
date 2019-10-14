@@ -78,6 +78,11 @@ def add_bus_to_list(request,vehicle_id):
     filterBusesobj.route_id = []
     return particular_buses_multiple(request)
 
+def getvehicles_id(request):
+    vehicles_id_list = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time)))\
+        .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
+        
+
 
 def particular_bus_id(request,vehicle_id):
     obj = Buses.objects.filter(vehicle_id=vehicle_id).order_by('-timestamp')[:filterBusesobj.top_entries]
@@ -136,6 +141,15 @@ class HomePageView(TemplateView):
             #     print (i.vehicle_id)
             filterBusesobj.vehicle_id = clean_vehicle_id
             filterBusesobj.route_id = clean_route_id
+            print ("hello " + str(request.POST))
+            if "filterbus" in request.POST:
+                print ("filterbus inside")
+                # request.session.pop('filterbus')
+                pass
+            else:
+                form = RVForm()
+                print ("filterbus inside")
+            # form.
         else:
             form = RVForm()
             
