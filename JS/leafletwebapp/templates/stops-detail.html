@@ -55,10 +55,8 @@
                 return L.marker(latlng, {
                     icon: L.icon({
                         // iconUrl: "static/img/bus_blue_point.png",
-                        iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                        iconSize: [24, 28],
-                        iconAnchor: [12, 28],
-                        popupAnchor: [0, -25]
+                        markerColor: 'green'
+
                     }),
                     // title: feature.properties.stop_name,
                     title: feature.properties.vehicle_id,
@@ -84,13 +82,17 @@
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
+                    markerColor: 'red',
                     // icon: L.icon({
+                    //     markerColor: 'green'
+
                     //     // iconUrl: "static/img/bus_blue_point.png",
-                    //     iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                    //     iconSize: [50, 54],
-                    //     iconAnchor: [12, 28],
-                    //     popupAnchor: [0, -25]
+                    //     // iconUrl: "{% static 'img/bus_blue_point.png' %}",
+                    //     // iconSize: [50, 54],
+                    //     // iconAnchor: [12, 28],
+                    //     // popupAnchor: [0, -25]
                     // }),
+
                     // title: feature.properties.stop_name,
                     title: feature.properties.vehicle_id,
                     riseOnHover: true
@@ -104,6 +106,7 @@
                  );
 			}
 		});
+        // alert(datapoints.length);
         datapoints.addTo(map);
 
 			L.control.liveupdate ({
@@ -116,7 +119,7 @@
 				interval: 5000
 			})
 			.addTo(map)
-			.startUpdating();
+			.stopUpdating();
             }           
         </script>
     
