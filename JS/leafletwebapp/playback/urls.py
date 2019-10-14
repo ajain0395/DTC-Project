@@ -7,6 +7,6 @@ app_name = 'playback'
 
 urlpatterns = [
     url(r'^playback/$', views.playBackView.as_view(), name='playback'),
-    url(r'^filtered_routes/$',views.particular_buses_multiple,name="filtered-buses"),
+    url(r'^filtered_routes/$',views.particular_buses_multiple,name="filtered-routes"),
     # url(r'^gotoPlayback/$', TemplateView.as_view(template_name='playback.html'), name="gotoPlayback"),
 ]

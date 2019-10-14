@@ -29,11 +29,46 @@
 
 <body>
     {{form.media.js}}
+
+    <script type="text/javascript">
+        function map_points(map,options)
+         {
+             //particular-bus
+             // console.log(mypara)
+             var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
+                         //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
+             {
+         pointToLayer: function (feature, latlng) {
+             return L.marker(latlng, {
+                 icon: L.icon({
+                     // iconUrl: "static/img/bus_blue_point.png",
+                     iconUrl: "{% static 'img/bus_blue_point.png' %}",
+                     iconSize: [24, 28],
+                     iconAnchor: [12, 28],
+                     popupAnchor: [0, -25]
+                 }),
+                 // title: feature.properties.stop_name,
+                 title: feature.properties.vehicle_id,
+                 riseOnHover: true
+             });
+         },
+         onEachFeature: function(feature,layer){
+             // layer.bindPopup(feature.properties.stop_name.toString());
+             layer.bindPopup(feature.properties.vehicle_id.toString());
+         }
+     });
+     //datasets.addTo(map);
+     
+     datapoints.addTo(map);
+    }
+    
+    </script> 
+
     <div id="upright">
       
 
-        <!-- {% leaflet_map "gis" callback="map_points"  %} -->
-        {% leaflet_map "gis" %}
+        {% leaflet_map "gis" callback="map_points"  %}
+        <!-- {% leaflet_map "gis" %} -->
        
     </div>
    
