@@ -123,7 +123,7 @@
 
     <div id="upleft">  
 
-        <button type="submit"  onclick="location.href='{% url 'stops:gotoPlayback' %}'" >PlayBack</button>
+        <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button>
 
         <form action="/" method="post" >
             {% csrf_token %}

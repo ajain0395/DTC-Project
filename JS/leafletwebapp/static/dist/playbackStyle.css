@@ -1,12 +1,12 @@
 #upleft { 
-    width:10%; 
+    width:15%; 
     height: 100%; 
     float:left; 
    background: blanchedalmond;
  }
  
 #upright { 
-    width:89%; 
+    width:84%; 
     height:100%; 
     float:right;
  }

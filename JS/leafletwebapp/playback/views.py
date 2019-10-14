@@ -14,7 +14,8 @@ from django.template import RequestContext
 class BusFilter:
     time = 15
     speed = ""
-    date = ""
+    startDate = ""
+    endDate= ""
     route_id = ""
 
 
@@ -35,12 +36,18 @@ def particular_buses_multiple(request):
     buses_points = serialize('geojson',filtered_buses)
     return HttpResponse(buses_points,content_type='json')
 
+def appendTimeZone(playTime):
+    timeList = playTime.split('+')
+    newTime = timeList[0]+'+05:30'
+    return newTime
+
+
 class playBackView(DetailView):
     template_name = 'playback.html'
     model = Buses
     
     def get(self, request, **kwargs):
-        print("inside get")
+        # print("inside get")
         form = MyForm()
         return render(request, self.template_name, {"formp": form})
         #return render(request, self.template_name)
@@ -50,7 +57,15 @@ class playBackView(DetailView):
         form = MyForm(request.POST)
         if form.is_valid():
             clean_route_id = form.cleaned_data['route_id_f']
+            startDateTime = form.cleaned_data['startDateTime']
+            endDateTime = form.cleaned_data['endDateTime']
+            
+            cleanStartDateTime = appendTimeZone(str(startDateTime))
+            cleanEndDateTime = appendTimeZone(str(endDateTime))
+            #print("new start and end time "+cleanStartDateTime+"\t"+cleanEndDateTime)
             filterObj.route_id = clean_route_id
+            filterObj.startDate = cleanStartDateTime
+            filterObj.endDate = cleanEndDateTime
             
         return render(request, self.template_name, {"formp": form})
        # return render(request, self.template_name)
