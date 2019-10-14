@@ -43,10 +43,10 @@ def particular_buses_multiple(request):
             for i in range(0,len(filterObj.route_id)):
                 filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],
             timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
+        filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
     # print("filterrrrrrrrrr "+str(filtered_routes))
 
     buses_points = serialize('geojson',filtered_routes)
-    filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
     print (filterObj.startDate)
     # filterObj.startDate = ""
     # filterObj.endDate = ""
