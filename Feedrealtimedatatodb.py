@@ -17,7 +17,7 @@ import datetime
 import time
 
 
-sleepTime = 8	      #Time to wait for next iteration
+sleepTime = 7	      #Time to wait for next iteration
 fileName = 'dummy.csv'             #Name of the filename to save as csv
 key='6uwbqTNiek5jYJKFAev0DZgH5LdeqXAR'          #Key fortransit website
 apiurl = 'https://otd.delhi.gov.in/api/realtime/VehiclePositions.pb?key='
