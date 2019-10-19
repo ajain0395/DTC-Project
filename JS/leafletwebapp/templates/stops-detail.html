@@ -44,6 +44,36 @@
     {{form.media.js}}
 
             <script type="text/javascript">
+
+iconsmap = {}
+
+function returnicon(iconnumber)
+{
+  var busurl = "/static/bus_icon/"+iconnumber+".png";
+ return new L.Icon({
+iconUrl: busurl,
+iconSize: [30, 45],
+iconAnchor: [12, 45],
+popupAnchor: [1, -34],
+shadowSize: [45, 45]
+})
+}
+function getnewicon(vehicle_id)
+{ 
+        if( typeof getnewicon.counter == 'undefined' ) {
+          getnewicon.counter = 0;
+      }
+      if(vehicle_id in iconsmap)
+      {
+        
+      }
+      else{
+        iconsmap[vehicle_id] = returnicon(getnewicon.counter%13);
+        getnewicon.counter++;
+      }
+        
+        return iconsmap[vehicle_id];
+}
            function map_points(map,options)
             {
                 //particular-bus
@@ -76,24 +106,11 @@
 
 
             function map_init(map, options) {
-                // var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}");
                 var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
-                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
-                    markerColor: 'red',
-                    // icon: L.icon({
-                    //     markerColor: 'green'
-
-                    //     // iconUrl: "static/img/bus_blue_point.png",
-                    //     // iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                    //     // iconSize: [50, 54],
-                    //     // iconAnchor: [12, 28],
-                    //     // popupAnchor: [0, -25]
-                    // }),
-
-                    // title: feature.properties.stop_name,
+                    icon:getnewicon(feature.properties.vehicle_id),
                     title: feature.properties.vehicle_id,
                     riseOnHover: true
                 });
