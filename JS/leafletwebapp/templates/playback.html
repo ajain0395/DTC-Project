@@ -38,7 +38,6 @@
       var busurl = "/static/bus_icon/"+iconnumber+".png";
      return new L.Icon({
   iconUrl: busurl,
-  // shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
   iconSize: [30, 45],
   iconAnchor: [12, 45],
   popupAnchor: [1, -34],
@@ -65,47 +64,26 @@
          {
             var heading = document.getElementById("p1");
             var timeelapsed = 0;
-            // heading.innerHTML = timeelapsed;
-           // var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}");
                 var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
-                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
                     icon:getnewicon(feature.properties.vehicle_id),
-//                     icon: function (options) {
-//                         i = i+1;
-// 	return allicons[i%8];
-// },
-                    // icon: L.icon({
-                    //     markerColor: 'green'
-
-                    //     // iconUrl: "static/img/bus_blue_point.png",
-                    //     // iconUrl: "{% static 'img/bus_blue_point.png' %}",
-                    //     // iconSize: [50, 54],
-                    //     // iconAnchor: [12, 28],
-                    //     // popupAnchor: [0, -25]
-                    // }),
-
-                    // title: feature.properties.stop_name,
                     title: feature.properties.vehicle_id,
                     riseOnHover: true
                 });
             },
 			onEachFeature: function(feature,layer){
-				// layer.bindPopup(feature.properties.stop_name.toString());
                 layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
                  "<br>"+"Speed: " + feature.properties.speed.toString() +
                  "<br>"+"Route id: " + feature.properties.route_id.toString()
                  );
 			}
 		});
-        // alert(datapoints.length);
         datapoints.addTo(map);
 
 			L.control.liveupdate ({
 				update_map: function () {
-        // datapoints.addTo(map);
         
         timeelapsed = timeelapsed + 10;
         datapoints.addUrl("{% url 'playback:filtered-routes' %}");
