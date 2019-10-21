@@ -20,8 +20,21 @@ class FilterBuses:
     vehicle_id = []
     filter_field = ""
     route_id = []
+    def __init__(self):
+        self.time = 15
+        self.top_entries = 1
+        self.vehicle_id = []
+        self.filter_field = ""
+        self.route_id = []
+    def print_filters(self):
+        print ("Routes Selected " + str(self.route_id))
+        print ("Vehicles Selected " + str(self.vehicle_id))
+        print ("Field Selected " + str(self.filter_field))
+        print ("Time delta Selected " + str(self.time))
+        print ("Top Selected " + str(self.top_entries))
 
-filterBusesobj = FilterBuses()
+# request.session[buskey]. = FilterBuses()
+buskey = 'busfilter'
 
 class StopsTemplateView(TemplateView):
     """
@@ -48,44 +61,21 @@ class BusesDetailView(DetailView):
     template_name = 'stops-detail.html'
     model = Buses
 
-def print_filters():
-    print ("Routes Selected " + str(filterBusesobj.route_id))
-    print ("Vehicles Selected " + str(filterBusesobj.vehicle_id))
-    print ("Field Selected " + str(filterBusesobj.filter_field))
-    print ("Time delta Selected " + str(filterBusesobj.time))
-    print ("Top Selected " + str(filterBusesobj.top_entries))
-
-def particular_buses_multiple(request):
-    print_filters()
-    filtered_buses = Buses.objects.none()
-    if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
-        for i in range(0,len(filterBusesobj.vehicle_id)):
-            filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
-        timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
-
-    if(len(filterBusesobj.route_id) > 0 and filterBusesobj.route_id[0] != -1):
-        for i in range(0,len(filterBusesobj.route_id)):
-            filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=filterBusesobj.route_id[i],
-        timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
-
-    buses_points = serialize('geojson',filtered_buses)
-    return HttpResponse(buses_points,content_type='json')
-
-def add_bus_to_list(request,vehicle_id):
-    filterBusesobj.filter_field = "vehicle_id"
-    if(vehicle_id not in filterBusesobj.vehicle_id):
-        filterBusesobj.vehicle_id.append(vehicle_id)
-    filterBusesobj.route_id = []
-    return particular_buses_multiple(request)
+# def add_bus_to_list(request,vehicle_id):
+#     request.session[buskey]['filter_field'] = "vehicle_id"
+#     if(vehicle_id not in request.session[buskey]['vehicle_id']):
+#         request.session[buskey]['vehicle_id'].append(vehicle_id)
+#     request.session[buskey]['route_id'] = []
+#     return particular_buses_multiple(request)
 
 def getvehicles_id(request):
-    vehicles_id_list = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time)))\
+    vehicles_id_list = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time'])))\
         .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
         
 
 
 def particular_bus_id(request,vehicle_id):
-    obj = Buses.objects.filter(vehicle_id=vehicle_id).order_by('-timestamp')[:filterBusesobj.top_entries]
+    obj = Buses.objects.filter(vehicle_id=vehicle_id).order_by('-timestamp')[:request.session[buskey]['top_entries']]
     # print (len(obj))
     # print (obj[0].speed)
     #print (vehicle_id+"hello here")
@@ -114,10 +104,11 @@ from django.template import RequestContext
 
 class HomePageView(TemplateView):
     template_name = "stops-detail.html"
-    form = RVForm()
 
     def get(self, request, **kwargs):
         print("inside get")
+        request.session[buskey] = FilterBuses().__dict__
+        print (request.session[buskey])
         form = RVForm()
         return render(request, self.template_name, {"form": form})
 
@@ -131,7 +122,7 @@ class HomePageView(TemplateView):
 
             # if(len(clean_route_id) == 1 and )
 
-            # filterBusesobj.filter_field="vehicle_id"
+            # request.session[buskey]['filter_field']="vehicle_id"
             # clean_vehicle_id = asd
             print (clean_vehicle_id)
             # print (asd)
@@ -139,8 +130,8 @@ class HomePageView(TemplateView):
             #     print (i['vehicle_id'])
             # for i in asd:
             #     print (i.vehicle_id)
-            filterBusesobj.vehicle_id = clean_vehicle_id
-            filterBusesobj.route_id = clean_route_id
+            request.session[buskey]['vehicle_id'] = clean_vehicle_id
+            request.session[buskey]['route_id'] = clean_route_id
             print ("hello " + str(request.POST))
             if "filterbus" in request.POST:
                 print ("filterbus inside")
@@ -154,3 +145,19 @@ class HomePageView(TemplateView):
             form = RVForm()
             
         return render(request, self.template_name, {"form": form})
+    def particular_buses_multiple(request):
+        # print_filters()
+        print (request.session[buskey])
+        filtered_buses = Buses.objects.none()
+        if(len(request.session[buskey]['vehicle_id']) > 0 and request.session[buskey]['vehicle_id'][0] != -1):
+            for i in range(0,len(request.session[buskey]['vehicle_id'])):
+                filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=request.session[buskey]['vehicle_id'][i],
+            timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time']))).order_by('-timestamp')[:request.session[buskey]['top_entries']])
+
+        if(len(request.session[buskey]['route_id']) > 0 and request.session[buskey]['route_id'][0] != -1):
+            for i in range(0,len(request.session[buskey]['route_id'])):
+                filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=request.session[buskey]['route_id'][i],
+            timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time']))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+
+        buses_points = serialize('geojson',filtered_buses)
+        return HttpResponse(buses_points,content_type='json')

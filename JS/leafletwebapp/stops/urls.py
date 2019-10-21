@@ -1,7 +1,14 @@
 from django.conf.urls import url
 from django.views.generic import TemplateView
-from .views import (AllStops,StopsDetailView,StopsTemplateView,AllBuses,BusesDetailView,
-particular_bus_id,particular_bus_id,add_bus_to_list,particular_buses_multiple,HomePageView)
+from .views import (AllStops,
+StopsDetailView,
+StopsTemplateView,
+AllBuses,
+BusesDetailView,
+particular_bus_id,
+# add_bus_to_list,
+# particular_buses_multiple,
+HomePageView)
 
 
 app_name = 'stops'
@@ -29,11 +36,11 @@ urlpatterns = [
         url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
         particular_bus_id,name="particular-bus"),
 
-        url(r'^showbus/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
-        add_bus_to_list,name="add-bus-to-list"),
+        # url(r'^showbus/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
+        # add_bus_to_list,name="add-bus-to-list"),
         
         url(r'^filtered_buses/$',
-        particular_buses_multiple,name="filtered-buses"),
+        HomePageView.particular_buses_multiple,name="filtered-buses"),
 
         # url(r'^gotoPlayback/$', TemplateView.as_view(template_name='playback.html'), name="gotoPlayback"),
         

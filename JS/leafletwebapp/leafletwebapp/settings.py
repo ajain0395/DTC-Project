@@ -138,6 +138,7 @@ PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
 SELECT2_JS = '/static/easy_select2/vendor/select2/js/select2.min.js'
 SELECT2_CSS = '/static/easy_select2/vendor/select2/css/select2.min.css'
+SESSION_SAVE_EVERY_REQUEST = True
 
 STATICFILES_DIRS =(
     os.path.join(BASE_DIR,'static'),
