@@ -160,7 +160,7 @@ function getnewicon(vehicle_id)
 
         <form action="/" method="post" >
             {% csrf_token %}
-            {{ form.as_ul}}
+            {{ form.as_p}}
             <input type="submit" name="filterbus" value="Filter">
             
         </form>

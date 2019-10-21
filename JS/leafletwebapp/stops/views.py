@@ -117,21 +117,21 @@ class HomePageView(TemplateView):
         form = RVForm(request.POST)
         if form.is_valid():
             # vehicle_ids = form.cleaned_data['vehicle_id']
-            clean_vehicle_id =  form.cleaned_data['vehicle_id_f']
-            clean_route_id = form.cleaned_data['route_id_f']
+            # clean_vehicle_id =  form.cleaned_data['vehicle_id_f']
+            # clean_route_id = form.cleaned_data['route_id_f']
 
             # if(len(clean_route_id) == 1 and )
 
             # request.session[buskey]['filter_field']="vehicle_id"
             # clean_vehicle_id = asd
-            print (clean_vehicle_id)
+            # print (clean_vehicle_id)
             # print (asd)
             # for i in asd.values():
             #     print (i['vehicle_id'])
             # for i in asd:
             #     print (i.vehicle_id)
-            request.session[buskey]['vehicle_id'] = clean_vehicle_id
-            request.session[buskey]['route_id'] = clean_route_id
+            request.session[buskey]['vehicle_id'] = form.getcleanedvehicle()
+            request.session[buskey]['route_id'] = form.getcleanedroutes()
             print ("hello " + str(request.POST))
             if "filterbus" in request.POST:
                 print ("filterbus inside")
