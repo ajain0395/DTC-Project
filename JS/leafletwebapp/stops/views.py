@@ -110,6 +110,7 @@ class HomePageView(TemplateView):
         request.session[buskey] = FilterBuses().__dict__
         print (request.session[buskey])
         form = RVForm()
+        form.__init__()
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, **kwargs):

@@ -74,35 +74,35 @@ function getnewicon(vehicle_id)
         
         return iconsmap[vehicle_id];
 }
-           function map_points(map,options)
-            {
-                //particular-bus
-                // console.log(mypara)
-                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:particular-bus' vehicle_id='DL1PD2596' %}",
-                            //   var datapoints = new L.GeoJSON.AJAX("{% url 'stops:all-buses' %}",
+function getbusstops()
+{
+    var stops_var = new L.GeoJSON.AJAX("{% url 'stops:all-stops' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
-                    icon: L.icon({
-                        // iconUrl: "static/img/bus_blue_point.png",
-                        markerColor: 'green'
-
+                    icon:new L.Icon({
+                    iconUrl: "{% static 'bus_icon/stop.png' %}",
+                    iconSize: [15, 22],
+                    iconAnchor: [6, 22],
+                    popupAnchor: [1, -34],
+                    shadowSize: [22, 22]
                     }),
-                    // title: feature.properties.stop_name,
-                    title: feature.properties.vehicle_id,
+                    title: feature.properties.stop_name,
                     riseOnHover: true
                 });
             },
 			onEachFeature: function(feature,layer){
 				// layer.bindPopup(feature.properties.stop_name.toString());
-                layer.bindPopup(feature.properties.vehicle_id.toString());
+                layer.bindPopup("Stop Name: "+feature.properties.stop_name.toString() +
+                 "<br>"+"Stop Code: " + feature.properties.stop_code.toString() +
+                 "<br>"+"Stop Id: " + feature.properties.stop_id.toString() 
+                 );
 			}
 		});
-		//datasets.addTo(map);
-        
-		datapoints.addTo(map);
-            }
+        return stops_var;
+}
 
+        var stops_points = getbusstops();
 
 
             function map_init(map, options) {
@@ -123,9 +123,9 @@ function getnewicon(vehicle_id)
                  );
 			}
 		});
-        // alert(datapoints.length);
         datapoints.addTo(map);
-
+        var controlLayers = map.layerscontrol;
+        controlLayers.addOverlay(stops_points, "Bus Stops");
 			L.control.liveupdate ({
 				update_map: function () {
         // datapoints.addTo(map);

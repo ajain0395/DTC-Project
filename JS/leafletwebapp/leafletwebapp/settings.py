@@ -151,7 +151,14 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM' :11,
     'SCALE':'both',
     'ATTRIBUTION_PREFIX' : "DTC_PROJECT",
-    'OVERLAYS':[('MapBox-Street', 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w', {'attribution': '&copy; MapBox'}),
-    ('MapBox-Satellite', 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w', {'attribution': '&copy; MapBox'})
-    ],
+    'TILES': [
+          ('MapBox Street', 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w',
+           {'attribution': '&copy; MapBox'}),
+          ('MapBox-Satellite', 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w',
+           {'attribution': '&copy; MapBox'}),
+           ('OSM', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+     {'attribution': '&copy; OSM', 'maxZoom': 18}),
+     ],
+    # 'OVERLAYS':[('MapBox-Street', '/allstops', {'attribution': '&copy; MapBox'})
+    # ],
 }
