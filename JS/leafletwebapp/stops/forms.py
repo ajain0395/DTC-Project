@@ -36,19 +36,21 @@ def getroutes():
 
 class RVForm(forms.Form):
     vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
-    #  widget=Select2Multiple(select2attrs={'width': 'auto'}),
-     initial=-1)
+    widget=forms.SelectMultiple(attrs={'id':"boot-multiselect-demo" ,'multiple':"multiple"}),initial=-1)
     route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=getroutes(),
     #  widget=Select2Multiple(select2attrs={'width': 'auto'}),
      initial=-1)
 
     def __init__(self, *args,**kwargs):
         super(RVForm, self).__init__(*args, **kwargs)
-        self.vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
-        initial=-1)
-        self.route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=getroutes(),
-        initial=-1)
+        self.fields['vehicle_id_f'].choices = getvehicles()
+        self.fields['route_id_f'].choices = getroutes()
+        # self.vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
+        # initial=-1)
+        # self.route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=getroutes(),
+        # initial=-1)
     def getcleanedvehicle(self):
         return self.cleaned_data.get("vehicle_id_f")
     def getcleanedroutes(self):
         return self.cleaned_data.get("route_id_f")
+        
