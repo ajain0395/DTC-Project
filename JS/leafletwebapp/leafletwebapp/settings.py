@@ -37,10 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.gis',
-    'jquery',
     'stops.apps.StopsConfig',
+    'playback.apps.PlaybackConfig',
     'leaflet',
     'easy_select2',
+    'crispy_forms',
 
 ]
 
@@ -136,29 +137,46 @@ USE_TZ = True
 STATIC_URL = '/static/'
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
-SELECT2_JS = '/static/easy_select2/vendor/select2/js/select2.min.js'
-SELECT2_CSS = '/static/easy_select2/vendor/select2/css/select2.min.css'
+SELECT2_JS = 'easy_select2/vendor/select2/js/select2.min.js'
+SELECT2_CSS = 'easy_select2/vendor/select2/css/select2.min.css'
 SESSION_SAVE_EVERY_REQUEST = True
+SELECT2_USE_BUNDLED_JQUERY = False
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# SELECT2_CACHE_BACKEND = 'select2'
+
+
 
 STATICFILES_DIRS =(
     os.path.join(BASE_DIR,'static'),
 )
-
+MAXZOOM_MAP = 19
 LEAFLET_CONFIG = {
+
+
+    'RESET_VIEW': False,
+'MINIMAP': True,
+
     'DEFAULT_CENTER' : (28.613939, 77.209023),
-    'MAX_ZOOM' : 20,
-    'MIN_ZOOM' : 1,
+    'MAX_ZOOM' : MAXZOOM_MAP,
+    'MIN_ZOOM' : 10,
     'DEFAULT_ZOOM' :11,
     'SCALE':'both',
     'ATTRIBUTION_PREFIX' : "DTC_PROJECT",
     'TILES': [
           ('MapBox Street', 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w',
-           {'attribution': '&copy; MapBox'}),
+           {'attribution': '&copy; MapBox', 'maxZoom': MAXZOOM_MAP}),
           ('MapBox-Satellite', 'https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWphaW4wMzk1IiwiYSI6ImNqeDczMWNkczAwcngzeHAzaDc2aGptaHIifQ.PrZuFAsV8w5ghhUhe8AF3w',
-           {'attribution': '&copy; MapBox'}),
+           {'attribution': '&copy; MapBox', 'maxZoom': MAXZOOM_MAP}),
            ('OSM', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-     {'attribution': '&copy; OSM', 'maxZoom': 18}),
+     {'attribution': '&copy; OSM', 'maxZoom': MAXZOOM_MAP}),
      ],
+    'PLUGINS': {
+    'ZoomHome': {
+        'css': ['leafletzoomhome/leaflet.zoomhome.css'],
+        'js': ['leafletzoomhome/leaflet.zoomhome.min.js','leafletzoomhome/leaflet.zoomhome.js'],
+        'auto-include': True,
+    },
+    }, 
     # 'OVERLAYS':[('MapBox-Street', '/allstops', {'attribution': '&copy; MapBox'})
     # ],
 }

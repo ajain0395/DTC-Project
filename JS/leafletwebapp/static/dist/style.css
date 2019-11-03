@@ -1,3 +1,17 @@
+.leaflet-container {  /* all maps */
+   width:  100%;
+   height: 100%;
+}
+
+#specialbigmap {
+   height: 100%;
+}
+
+
+/* Resize the "display_raw" textbox */
+.django-leaflet-raw-textarea {
+   width: 100%;
+}
 #upleft { 
     width:10%; 
     height: 100%; 
@@ -16,33 +30,37 @@
     float: bottom;
     background:grey 
  }
-
  textarea#classic
 {
     width: 100%;
-    height: 88%;
+    height: 85%;
     padding: 5px;
     margin: 0;
-    -webkit-box-sizing: border-box;
+    /* -webkit-box-sizing: border-box; */
 }
-html{
+
+
+/* html{
    width: 100%;
    height: 100%;
    align-items: center;
-}
-form{
+} */
+/* form{
    width: 100%;
    height: 100%;
    align-items: center;
-}
+} */
  select{
    width: 98%;
-   /* height: 96%; */
-   height: 40%;
+   /* height: 40%; */
    align-items: center;
 }
-/*
+
 li{
    width: 100%;
-   height: 96%;
-} */
+   /* height: 96%; */
+}
+.leaflet-container-default {
+   height: 80%;
+   width: 100%;
+}

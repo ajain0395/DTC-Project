@@ -131,8 +131,8 @@ class HomePageView(TemplateView):
             #     print (i['vehicle_id'])
             # for i in asd:
             #     print (i.vehicle_id)
-            request.session[buskey]['vehicle_id'] = form.getcleanedvehicle()
-            request.session[buskey]['route_id'] = form.getcleanedroutes()
+            request.session[buskey]['vehicle_id'],request.session[buskey]['route_id'] = form.getcleanedboth()
+            
             print ("hello " + str(request.POST))
             if "filterbus" in request.POST:
                 print ("filterbus inside")

@@ -142,7 +142,7 @@ def main():
         totalTime =  t2-t1
         print(totalTime)
         if(totalTime<10):
-            time.sleep(10-totalTime-1)
+            time.sleep((10-totalTime)-1)
     
 if __name__=="__main__":
    main()

@@ -30,7 +30,7 @@ urlpatterns = [
         # url(r'^$',
         # StopsTemplateView.as_view(), name='stops-template'),
 
-        url(r'^$',HomePageView.as_view()),
+        url(r'^$',HomePageView.as_view(),name="homepage"),
         # url(r'^$',TemplateView.as_view(template_name = 'stops-detail.html')),
 
         url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',

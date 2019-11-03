@@ -1,6 +1,6 @@
 
 from django import forms
-from easy_select2.widgets import Select2Multiple
+from django_select2.forms import Select2MultipleWidget
 from .models import Buses
 from django.utils import timezone
 from datetime import timedelta
@@ -15,7 +15,7 @@ def getvehicles():
     queryset_vehicle = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=FilterBuses.time)))\
         .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
     vehicles = []
-    vehicles.append((-1,'---------'))
+    # vehicles.append((-1,'---------'))
     for i in queryset_vehicle:
         vehicles.append((i['vehicle_id'],i['vehicle_id']))
     return vehicles
@@ -26,7 +26,7 @@ def getroutes():
     # print (str(queryset.query))
     
     routes = []
-    routes.append((-1,'---------'))
+    # routes.append((-1,'---------'))
     # queryset = queryset.order_by('-timestamp')
     # print ('NewForm')
     
@@ -36,10 +36,14 @@ def getroutes():
 
 class RVForm(forms.Form):
     vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
-    widget=forms.SelectMultiple(attrs={'id':"boot-multiselect-demo" ,'multiple':"multiple"}),initial=-1)
+    widget=Select2MultipleWidget,required=False,
+    #  initial=-1
+     )
+    # widget=forms.SelectMultiple(attrs={'id':"boot-multiselect-demo" ,'multiple':"multiple"}),initial=-1)
     route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=getroutes(),
-    #  widget=Select2Multiple(select2attrs={'width': 'auto'}),
-     initial=-1)
+     widget=Select2MultipleWidget,required=False,
+    #  initial=-1
+     )
 
     def __init__(self, *args,**kwargs):
         super(RVForm, self).__init__(*args, **kwargs)
@@ -53,4 +57,12 @@ class RVForm(forms.Form):
         return self.cleaned_data.get("vehicle_id_f")
     def getcleanedroutes(self):
         return self.cleaned_data.get("route_id_f")
+    def getcleanedboth(self):
+        X = self.getcleanedvehicle()
+        Y = self.getcleanedroutes()
+        if(len(X) == 0 and len(Y) == 0):
+            self._errors['vehicle_id_f'] = self.error_class(['Select 1 Vehicle or Route First'])
+            return [],[]
+            # self._errors['vehicle_id_f'] = self.error_class(['Minimum 5 characters required'])
+        return X,Y
         
