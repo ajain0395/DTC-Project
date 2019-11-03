@@ -130,7 +130,7 @@
 
                         <form action="/playback/" method="post" >
                             {% csrf_token %}
-                            {{ formp|crispy}}
+                            {{ timeroute|crispy}}
                             <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
                         </form>                    
                         <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->

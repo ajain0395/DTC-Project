@@ -1,31 +1,125 @@
 from django import forms
-from django_select2.forms import Select2MultipleWidget
+# from easy_select2.widgets import Select2Multiple
+from django_select2.forms import Select2MultipleWidget,Select2Widget
 from stops.models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from django.forms import DateTimeField
+from django.utils.dateparse import parse_datetime
 
+def appendTimeZone(playTime):
+    playTime = str(playTime)
+    timeList = playTime.split('+')
+    newTime = timeList[0]+'+05:30'
+    newTime = parse_datetime(newTime)
+    return newTime
 
-#from .views import filterObj
-# from django_select2.forms import (
-#     HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
-#     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,
-#     Select2Widget
-# )
+def getvehicles(routeId, startTime,endTime):
+    queryset_vehicle = Buses.objects.filter(route_id=routeId,timestamp__gte=startTime,timestamp__lte=endTime)\
+    .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
+    vehicles = []
+    vehicles.append((-1,'---------'))
+    for i in queryset_vehicle:
+        vehicles.append((i['vehicle_id'],i['vehicle_id']))
+    print ("vehicle list obtained -----",vehicles)
+    return vehicles
 
-class MyForm(forms.Form):
+def getroutes():
     queryset_route = Buses.objects.order_by('route_id','timestamp').distinct('route_id').values('route_id')
     routes = []
     # routes.append((-1,'---------'))
-
-    #startDate = DateTimeField(widget=forms.SelectDateWidget())
-    #startTime = DateTimeWidget(usel10n=True)
-    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
-    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
-    #print(startDateTime)
     for i in queryset_route:
         routes.append((i['route_id'],i['route_id']))
+    return routes
+
+class Timerouteform(forms.Form):
+    # class Meta:
+    #     fields = ('startDateTime', 'endDateTime', 'route_id_f', 'vehicle_id_f')
+    # queryset_route = Buses.objects.order_by('route_id','timestamp').distinct('route_id').values('route_id')
+    # routes = []
+    # routes.append((-1,'---------'))
+
+    # #startDate = DateTimeField(widget=forms.SelectDateWidget())
+    # #startTime = DateTimeWidget(usel10n=True)
+    # #timestamp = forms.DateField(widget=forms.DateInput(attrs={'class':'timepicker'}))
+    # startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
+    # endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'Y-mm-dd HH:MM:SS'}))
+    # #print(startDateTime)
+    # for i in queryset_route:
+    #     routes.append((i['route_id'],i['route_id']))
     
-    route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes[:100],
-    widget=Select2MultipleWidget)
-    #print("heloooooooooooooooooooooooooo"+str(route_id_f))
+    # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
+    # #print("heloooooooooooooooooooooooooo"+str(route_id_f))
+
+    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
+    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
+    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
+    vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget= forms.HiddenInput,required=False)
+    vehicle_state = False
+    def __init__(self, *args,**kwargs):
+        super(Timerouteform, self).__init__(*args, **kwargs)
+        self.vehicle_state = False
+        # self.vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
+        # initial=-1)
+        # self.route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
+    # def getcleanedvehicle(self):
+    #     return self.cleaned_data.get("vehicle_id_f")
+    def getcleanedroutes(self):
+        return self.cleaned_data.get("route_id_f")
+
+    def getcleanedvehicles(self):
+        return self.cleaned_data.get("vehicle_id_f")
+
+    def getcleanedstarttime(self):
+        return self.cleaned_data.get('startDateTime')
+
+    def getcleanedendtime(self):
+        return self.cleaned_data.get('endDateTime')
+
+    def getvehiclestate(self):
+        return self.vehicle_state
+
+    def showvehicles(self,*args, **kwargs):
+        choices = getvehicles(routeId= self.getcleanedroutes(),
+        startTime=appendTimeZone(self.getcleanedstarttime()),endTime=appendTimeZone(self.getcleanedendtime()))
+        self.vehicle_state = True
+        print (choices[0])
+        self.fields['vehicle_id_f'].choices = choices
+        # self.fields['vehicle_id_f'].widget = Select2Widget()
+        # self.fields['vehicle_id_f'].initial = choices[0][0]
+        self.fields['vehicle_id_f'].required = True
+        # super(Timerouteform, self).__init__(*args, **kwargs)
+        
+    def hidevehicles(self):
+        self.vehicle_state = False
+        self.fields['vehicle_id_f'].choices =[()]
+        self.fields['vehicle_id_f'].required = False
+        self.fields['vehicle_id_f'].widget = forms.HiddenInput()
+        # widget=Select2Widget
+
+# class VehicleForm(forms.Form):
+#     vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",
+#     widget=Select2MultipleWidget,
+#     # required=False
+#     )
+#     # vehicle_id_f=[]
+
+#     def __init__(self, *args, **kwargs):
+#         super(VehicleForm,self).__init__(*args, **kwargs)
+#         data = args[0]
+#         print ("form  ------- args  ",args)
+#         #print (args[0])
+#         # # print (kwargs)
+#         # print (kwargs['kwargs'])
+#         # print (len(kwargs['kwargs']))
+#         # print (type(kwargs['kwargs']))
+#         # print (kwargs.values()[0])
+#         if('route' in data):
+#             self.fields['vehicle_id_f'].choices = getvehicles(data['route'],data['startDate'],
+#             data['endDate'])
+#             # self.fields['vehicle_id_f'].initial = -1
+#         # self.vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(route_id,startTime,endTime),initial=-1)
+#         #print(self.cleaned_data.get('vehicle_id_f'))
+#         #print(self.vehicle_id_f)
+#     def getcleanedvehicle(self):
+#         return self.cleaned_data.get('vehicle_id_f')
