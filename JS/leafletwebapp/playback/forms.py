@@ -18,7 +18,7 @@ def getvehicles(routeId, startTime,endTime):
     queryset_vehicle = Buses.objects.filter(route_id=routeId,timestamp__gte=startTime,timestamp__lte=endTime)\
     .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
     vehicles = []
-    vehicles.append((-1,'---------'))
+    # vehicles.append((-1,'---------'))
     for i in queryset_vehicle:
         vehicles.append((i['vehicle_id'],i['vehicle_id']))
     print ("vehicle list obtained -----",vehicles)
@@ -56,14 +56,45 @@ class Timerouteform(forms.Form):
     route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
     vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget= forms.HiddenInput,required=False)
     vehicle_state = False
+    # def __init__(self,timeroute, *args,**kwargs):
+    #     print ("Inside new constructor")
+    #     super(Timerouteform, timeroute).__init__(*args, **kwargs)
+    #     # self.vehicle_state = False
+    #     choices = getvehicles(routeId= timeroute.getcleanedroutes(),
+    #     startTime=appendTimeZone(timeroute.getcleanedstarttime()),
+    #     endTime=appendTimeZone(timeroute.getcleanedendtime()))
+        
+    #     self.vehicle_state = True
+    #     # print (choices[0])
+        
+    #     self.fields['vehicle_id_f'] = forms.ChoiceField(label = "Vehicle Ids",
+    #     required=True,widget=Select2Widget,choices=choices)
+
     def __init__(self, *args,**kwargs):
         super(Timerouteform, self).__init__(*args, **kwargs)
-        self.vehicle_state = False
-        # self.vehicle_id_f = forms.MultipleChoiceField(label = "Vehicle Ids",choices=getvehicles(),
-        # initial=-1)
-        # self.route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
-    # def getcleanedvehicle(self):
-    #     return self.cleaned_data.get("vehicle_id_f")
+
+        # if(len(args) > 0):
+        #     if('oldform' in args[0]):
+        #         oldform = args[0]['oldform']
+
+        #         print ("Inside new constructor")
+        #         # super(Timerouteform, oldform).__init__(*args, **kwargs)
+        #         # self.vehicle_state = False
+        #         choices = getvehicles(routeId= oldform.getcleanedroutes(),
+        #         startTime=appendTimeZone(oldform.getcleanedstarttime()),
+        #         endTime=appendTimeZone(oldform.getcleanedendtime()))
+        #         self.vehicle_state = True
+        #         self.fields['route_id_f'].widget = forms.HiddenInput()
+        #         self.fields['startDateTime'].widget = forms.HiddenInput()
+        #         self.fields['endDateTime'].widget = forms.HiddenInput()
+        #         self.fields['route_id_f'].required = False
+        #         self.fields['startDateTime'].required = False
+        #         self.fields['endDateTime'].required = False
+        #         self.fields['vehicle_id_f'] = forms.ChoiceField(label = "Vehicle Ids",
+        #         required=True,widget=Select2Widget,choices=choices)
+
+
+
     def getcleanedroutes(self):
         return self.cleaned_data.get("route_id_f")
 
@@ -76,24 +107,24 @@ class Timerouteform(forms.Form):
     def getcleanedendtime(self):
         return self.cleaned_data.get('endDateTime')
 
-    def getvehiclestate(self):
-        return self.vehicle_state
-
     def showvehicles(self,*args, **kwargs):
         choices = getvehicles(routeId= self.getcleanedroutes(),
-        startTime=appendTimeZone(self.getcleanedstarttime()),endTime=appendTimeZone(self.getcleanedendtime()))
-        self.vehicle_state = True
-        print (choices[0])
-        self.fields['vehicle_id_f'].choices = choices
+        startTime=appendTimeZone(self.getcleanedstarttime()),
+        endTime=appendTimeZone(self.getcleanedendtime()))
+        
+        # self.vehicle_state = True
+        # print (choices[0])
+        self.fields['vehicle_id_f'] = forms.ChoiceField(label = "Vehicle Ids",
+                required=False,widget=Select2Widget,choices=choices)
         # self.fields['vehicle_id_f'].widget = Select2Widget()
         # self.fields['vehicle_id_f'].initial = choices[0][0]
-        self.fields['vehicle_id_f'].required = True
+        # self.fields['vehicle_id_f'].required = True
         # super(Timerouteform, self).__init__(*args, **kwargs)
         
     def hidevehicles(self):
-        self.vehicle_state = False
-        self.fields['vehicle_id_f'].choices =[()]
-        self.fields['vehicle_id_f'].required = False
+        # choices = getvehicles(routeId= self.getcleanedroutes(),
+        # startTime=appendTimeZone(self.getcleanedstarttime()),
+        # endTime=appendTimeZone(self.getcleanedendtime()))
         self.fields['vehicle_id_f'].widget = forms.HiddenInput()
         # widget=Select2Widget
 

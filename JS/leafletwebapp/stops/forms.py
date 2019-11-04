@@ -5,6 +5,7 @@ from .models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from .views import FilterBuses
+
 # from django_select2.forms import (
 #     HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
 #     ModelSelect2TagWidget, ModelSelect2Widget, Select2MultipleWidget,

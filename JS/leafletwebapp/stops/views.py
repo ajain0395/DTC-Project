@@ -11,6 +11,8 @@ from django.http import HttpRequest, HttpResponse
 # from stops.forms import StopsForm
 from django.utils import timezone
 from datetime import timedelta
+from django.contrib import messages
+
 
 # class static_members():
 #     pass
@@ -131,16 +133,21 @@ class HomePageView(TemplateView):
             #     print (i['vehicle_id'])
             # for i in asd:
             #     print (i.vehicle_id)
-            request.session[buskey]['vehicle_id'],request.session[buskey]['route_id'] = form.getcleanedboth()
-            
-            print ("hello " + str(request.POST))
-            if "filterbus" in request.POST:
-                print ("filterbus inside")
-                # request.session.pop('filterbus')
-                pass
+            vehicle = form.getcleanedvehicle()
+            route = form.getcleanedroutes()
+            if(len(vehicle)==0 and len(route) == 0):
+                messages.info(request, 'Select Vehicle or Route First')
             else:
-                form = RVForm()
-                print ("filterbus inside")
+                request.session[buskey]['vehicle_id'],request.session[buskey]['route_id'] = vehicle,route
+            
+            # print ("hello " + str(request.POST))
+            # if "filterbus" in request.POST:
+            #     print ("filterbus inside")
+            #     # request.session.pop('filterbus')
+            #     pass
+            # else:
+            #     form = RVForm()
+            #     print ("filterbus inside")
             # form.
         else:
             form = RVForm()
