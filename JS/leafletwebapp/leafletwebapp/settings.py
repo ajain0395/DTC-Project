@@ -35,11 +35,11 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
     'django.contrib.gis',
+    'django.contrib.staticfiles',
+    'leaflet',
     'stops.apps.StopsConfig',
     'playback.apps.PlaybackConfig',
-    'leaflet',
     'easy_select2',
     'crispy_forms',
 
@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'dtcdb',
         'USER': 'dtc',
         'PASSWORD': 'dtc',
-        # 'HOST': 'localhost',
+        #'HOST': 'localhost',
         'HOST': '192.168.18.221',
         'PORT': '5432',
     }
