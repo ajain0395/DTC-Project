@@ -23,10 +23,9 @@ fileName = 'dummy.csv'             #Name of the filename to save as csv
 key='6uwbqTNiek5jYJKFAev0DZgH5LdeqXAR'          #Key fortransit website
 apiurl = 'https://otd.delhi.gov.in/api/realtime/VehiclePositions.pb?key='
 
-def insert_to_buses(X):
+def insert_to_buses(X,connection):
     try:
-        connection = psycopg2.connect(host='localhost', dbname='dtcdb',   user='dtc', password='dtc')
-        connection.autocommit=False
+        #connection.autocommit=False
         sql = "INSERT INTO stops_buses (vehicle_id, trip_id, route_id, latitude, longitude, speed,timestamp, geometry)         VALUES (%s,%s,%s,%s,%s,%s,to_timestamp(%s,'yyyy-mm-dd hh24:mi:ss'), ST_SetSRID(ST_MakePoint(%s, %s), 4326))"
         with connection.cursor() as cur:
             cur.execute(sql, ((X['vehicle_id']),
@@ -39,15 +38,15 @@ def insert_to_buses(X):
                               (X['longitude']),
                               (X['latitude']),                         
                              ))
-        connection.commit()
+        #connection.commit()
         # print("Transaction completed successfully ")
     except (Exception, psycopg2.DatabaseError) as error :
         print ("Error in transction Reverting all other operations of a transction ", error)
         connection.rollback()
-    finally:
+    #finally:
         #closing database connection.
-        if(connection):
-            connection.close()
+        #if(connection):
+        #    connection.close()
             # print("PostgreSQL connection is closed")
 
 def entityCheck(feed):
@@ -82,7 +81,7 @@ def getFeed():
         return getFeed()
 
 
-def threadFunc(arr):
+def threadFunc(arr,connection):
      counter=0
      for block in arr:
         counter += 1
@@ -97,11 +96,32 @@ def threadFunc(arr):
         #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
         #row['label'] = block['vehicle']['vehicle'].get('label','')
         #t1=time.time()
-        insert_to_buses(row)    
+        insert_to_buses(row,connection)    
 
 
 
-def getDataFrame(dict_obj):
+def getDataFrame(dict_obj,connection):
+    #collector = []
+    counter=0
+    for block in dict_obj['entity']:
+        counter += 1
+        row = {}
+        #OrderedDict()
+        row['vehicle_id'] = block['id']
+        row['trip_id'] = block['vehicle']['trip'].get('tripId','')
+        row['route_id'] = block['vehicle']['trip'].get('routeId','')
+        row['latitude'] = block['vehicle']['position'].get('latitude','')
+        row['longitude'] = block['vehicle']['position'].get('longitude','')
+        row['speed'] = block['vehicle']['position'].get('speed','')
+        row['timestamp'] = block['vehicle'].get('timestamp','')
+        #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
+        #row['label'] = block['vehicle']['vehicle'].get('label','')
+        insert_to_buses(row,connection)
+        #collector.append(row)
+    #df = pd.DataFrame(collector)
+    #return df
+'''
+def getDataFrame(dict_obj,connection):
     div = len(dict_obj['entity'])//4
     print("Number of Entries ",len(dict_obj['entity']))
     i=1
@@ -110,14 +130,15 @@ def getDataFrame(dict_obj):
     arr3 = [dict_obj['entity'][i] for i in range((i-1)*div,i*div)]; i+=1
     arr4 = [dict_obj['entity'][i] for i in range((i-1)*div,len(dict_obj['entity']))]; 
     
-    t1 = Thread(target=threadFunc, args=(arr1,)) 
-    t2 = Thread(target=threadFunc, args=(arr2,)) 
-    t3 = Thread(target=threadFunc, args=(arr3,)) 
-    t4 = Thread(target=threadFunc, args=(arr4,))
+    t1 = Thread(target=threadFunc, args=(arr1,connection,)) 
+    t2 = Thread(target=threadFunc, args=(arr2,connection,)) 
+    t3 = Thread(target=threadFunc, args=(arr3,connection,)) 
+    t4 = Thread(target=threadFunc, args=(arr4,connection,))
     t1.start();t2.start();t3.start();t4.start();
     t1.join();t2.join();t3.join();t4.join(); 
-
-def getFrame():
+'''
+def getFrame(connection):
+    temp1 = time.time()
     entityFlag=False
     while entityFlag!=True:
         feed=getFeed()
@@ -125,24 +146,41 @@ def getFrame():
         print("Entity Present : ",entityFlag)
 
     dict_obj = MessageToDict(feed)
-    frame=getDataFrame(dict_obj)
+    temp2 = time.time()
+    print ("Data Fetching Time ",(temp2-temp1))
+    print ("Writing to DB...")
+    temp1 = time.time()
+    frame=getDataFrame(dict_obj,connection)
+    temp2=time.time()
+    totalTime =  temp2-temp1
+    print("DB Time ",totalTime)
+    print ("Writing to DB completed...")
     # frame['humantime'] = frame.apply( lambda row: datetime.datetime.fromtimestamp(int(row['timestamp'])),axis=1 )
     # feedtime = int(dict_obj['header']['timestamp'])
     # frame['feed time'] = datetime.datetime.fromtimestamp(feedtime)
     return frame
 
-def main():
+#def main():
+    
+if __name__=="__main__":
     iteration=0
     while(True):
+        while(True):
+            try:
+                mainconnection = psycopg2.connect(host='localhost', dbname='dtcdb',   user='dtc', password='dtc')
+                mainconnection.autocommit = False
+                break
+            except:
+                print ("Connection Error")
+                pass
         t1=time.time()
-        newFrame=getFrame()
+        newFrame=getFrame(mainconnection)
+        mainconnection.commit()
         iteration+=1
         #print("Iter : {0}, Shape : {1}".format(iteration,newFrame.shape))
         t2=time.time()
         totalTime =  t2-t1
-        print(totalTime)
+        print("Total Time ",totalTime)
         if(totalTime<10):
             time.sleep(2)
-    
-if __name__=="__main__":
-   main()
+   #main()

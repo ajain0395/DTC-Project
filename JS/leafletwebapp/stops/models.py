@@ -24,13 +24,13 @@ class Stops(models.Model):
 class Buses(models.Model):
     
     trip_id = models.CharField(max_length=100, blank=False)
-    route_id = models.IntegerField(blank=True)
-    geometry = geomodels.PointField(srid=4326,blank=True)
+    route_id = models.IntegerField(db_index=True,blank=True)
+    geometry = geomodels.PointField(db_index=False,srid=4326,blank=True)
     latitude = models.FloatField(blank=True,default=0.0)
     longitude = models.FloatField(blank=True,default=0.0)
     speed = models.FloatField(blank=True)
-    vehicle_id = models.CharField(max_length=100, blank=False)
-    timestamp = models.DateTimeField(blank=True)
+    vehicle_id = models.CharField(db_index=True,max_length=100, blank=False)
+    timestamp = models.DateTimeField(db_index=True,blank=True)
 
     class Meta:
         # order of drop-down list items

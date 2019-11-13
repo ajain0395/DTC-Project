@@ -85,7 +85,8 @@ def getDataFrame(dict_obj):
     counter=0
     for block in dict_obj['entity']:
         counter += 1
-        row = OrderedDict()
+        row = {}
+        #OrderedDict()
         row['vehicle_id'] = block['id']
         row['trip_id'] = block['vehicle']['trip'].get('tripId','')
         row['route_id'] = block['vehicle']['trip'].get('routeId','')
@@ -117,9 +118,13 @@ def getFrame():
 def main():
     iteration=0
     while(True):
+        t1=time.time()
         newFrame=getFrame()
         iteration+=1
         print("Iter : {0}, Shape : {1}".format(iteration,newFrame.shape))
+        t2=time.time()
+        totalTime =  t2-t1
+        print("Data Insertion Time: ",totalTime)
         time.sleep(sleepTime)
     
 if __name__=="__main__":
