@@ -12,9 +12,9 @@
        
     
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
+    <script src="{% static 'js/jquery.min.js' %}" ></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" ></script>
+    <script src="{% static 'js/jquery.js' %}" ></script>
     {% leaflet_css %}
     {{ form.media.css }}
     {{form.media.js}}
@@ -101,15 +101,9 @@ function getbusstops()
 }
 
         var stops_points = getbusstops();
-
-
-                function map_init(map, options) {
-
-                    map.removeControl(map.zoomControl);
-                    var zoomHome = L.Control.zoomHome({position: 'topleft'});
-                    zoomHome.addTo(map);
-
-                var datapoints = new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
+        function returnfilterbuses()
+        {
+            return new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
                 {
 			pointToLayer: function (feature, latlng) {
                 return L.marker(latlng, {
@@ -126,6 +120,16 @@ function getbusstops()
                  );
 			}
 		});
+        }
+
+
+                function map_init(map, options) {
+
+                    map.removeControl(map.zoomControl);
+                    var zoomHome = L.Control.zoomHome({position: 'topleft'});
+                    zoomHome.addTo(map);
+
+                var datapoints = returnfilterbuses();
         datapoints.addTo(map);
         var controlLayers = map.layerscontrol;
 
@@ -134,6 +138,9 @@ function getbusstops()
 			L.control.liveupdate ({
 				update_map: function () {
         // datapoints.addTo(map);
+        // newdatapoints = returnfilterbuses();
+        // map.removeLayer(datapoints);
+        // datapoints = newdatapoints;
         datapoints.refresh("{% url 'stops:filtered-buses' %}");
 					
 				},

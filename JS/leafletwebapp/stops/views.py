@@ -18,18 +18,21 @@ from django.contrib import messages
 #     pass
 class FilterBuses:
     time = 15
+    livetime = 5
     top_entries = 1
     vehicle_id = []
     filter_field = ""
     route_id = []
     def __init__(self):
         self.time = 15
+        self.livetime = 5
         self.top_entries = 1
         self.vehicle_id = []
         self.filter_field = ""
         self.route_id = []
     def print_filters(self):
         print ("Routes Selected " + str(self.route_id))
+        print ("Live Time" + str(self.livetime))
         print ("Vehicles Selected " + str(self.vehicle_id))
         print ("Field Selected " + str(self.filter_field))
         print ("Time delta Selected " + str(self.time))
@@ -37,6 +40,20 @@ class FilterBuses:
 
 # request.session[buskey]. = FilterBuses()
 buskey = 'busfilter'
+
+
+def requestlivetime(request):
+    return request[buskey]['livetime']
+def requestroutes(request):
+    return request[buskey]['route_id']
+def requestvehicleids(request):
+    return request[buskey]['vehicle_id']
+def requesttopentries(request):
+    return request[buskey]['top_entries']
+def requestfilterfield(request):
+    return request[buskey]['filter_field']
+def requesttime(request):
+    return request[buskey]['time']
 
 class StopsTemplateView(TemplateView):
     """
@@ -156,16 +173,22 @@ class HomePageView(TemplateView):
     def particular_buses_multiple(request):
         # print_filters()
         print (request.session[buskey])
-        filtered_buses = Buses.objects.none()
-        if(len(request.session[buskey]['vehicle_id']) > 0 and request.session[buskey]['vehicle_id'][0] != -1):
-            for i in range(0,len(request.session[buskey]['vehicle_id'])):
-                filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=request.session[buskey]['vehicle_id'][i],
-            timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time']))).order_by('-timestamp')[:request.session[buskey]['top_entries']])
+        
+        sessionvehicle_ids = requestvehicleids(request.session)
+        sessionroute_ids = requestroutes(request.session)
+        sessionlivetime = requestlivetime(request.session)
+        sessiontopentries = requesttopentries(request.session)
 
-        if(len(request.session[buskey]['route_id']) > 0 and request.session[buskey]['route_id'][0] != -1):
-            for i in range(0,len(request.session[buskey]['route_id'])):
-                filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=request.session[buskey]['route_id'][i],
-            timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time']))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+        filtered_buses = Buses.objects.none()
+        if(len(sessionvehicle_ids) > 0):
+            for i in range(0,len(sessionvehicle_ids)):
+                filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=sessionvehicle_ids[i],
+            timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('-timestamp')[:sessiontopentries])
+
+        if(len(sessionroute_ids) > 0 ):
+            for i in range(0,len(sessionroute_ids)):
+                filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=sessionroute_ids[i],
+            timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
 
         buses_points = serialize('geojson',filtered_buses)
         return HttpResponse(buses_points,content_type='json')
