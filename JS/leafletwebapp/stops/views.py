@@ -43,17 +43,17 @@ buskey = 'busfilter'
 
 
 def requestlivetime(request):
-    return request[buskey]['livetime']
+    return request['livetime']
 def requestroutes(request):
-    return request[buskey]['route_id']
+    return request['route_id']
 def requestvehicleids(request):
-    return request[buskey]['vehicle_id']
+    return request['vehicle_id']
 def requesttopentries(request):
-    return request[buskey]['top_entries']
+    return request['top_entries']
 def requestfilterfield(request):
-    return request[buskey]['filter_field']
+    return request['filter_field']
 def requesttime(request):
-    return request[buskey]['time']
+    return request['time']
 
 class StopsTemplateView(TemplateView):
     """
@@ -172,12 +172,13 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {"form": form})
     def particular_buses_multiple(request):
         # print_filters()
-        print (request.session[buskey])
-        
-        sessionvehicle_ids = requestvehicleids(request.session)
-        sessionroute_ids = requestroutes(request.session)
-        sessionlivetime = requestlivetime(request.session)
-        sessiontopentries = requesttopentries(request.session)
+        cookiedata = request.session[buskey]
+        print (cookiedata)
+
+        sessionvehicle_ids = requestvehicleids(cookiedata)
+        sessionroute_ids = requestroutes(cookiedata)
+        sessionlivetime = requestlivetime(cookiedata)
+        sessiontopentries = requesttopentries(cookiedata)
 
         filtered_buses = Buses.objects.none()
         if(len(sessionvehicle_ids) > 0):

@@ -21,9 +21,9 @@
 
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'dist/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
-    <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/playbackStyle.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/leaflet-liveupdate.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-messagebox.css' %}" />
     <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
 
     
@@ -33,12 +33,12 @@
 
     
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
-    <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
-    <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+    <script src="{% static 'js/leaflet-liveupdate.js' %}"></script>
+    <script src="{% static 'js/leaflet-messagebox.js' %}"></script>
 
 
 
-        <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
+        <script type="text/javascript" src="{% static 'js/leaflet.ajax.js' %}" >	</script>
 
 
     {{form.media.js}}
@@ -115,6 +115,12 @@
     
     </script> 
     <title>DTC Project</title>
+
+    {% if messages %} {% for message in messages %} {% if message.tags %}
+    <script>
+        alert("{{ message }}")
+    </script> {% endif %} {% endfor %} {% endif %}
+    
 </head>
 <body>
 
@@ -127,13 +133,22 @@
                 
                         
                         <!--  -->
+                        <div class="buttonHolder">
 
                         <form action="/playback/" method="post" >
                             {% csrf_token %}
                             {{ timeroute|crispy}}
+                            <button type="submit" name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'playback:playback' %}'" >Reset</button>
+
                             <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
-                        </form>                    
-                        <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->
+                            
+    
+
+                        </form>
+                                          </div>
+
+                        <!-- <input type="submit" name="reset" class="btn btn-success" value="reset"> -->
+
                     </nav>
                 
                     <!-- Page Content  -->

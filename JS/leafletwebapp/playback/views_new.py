@@ -13,13 +13,14 @@ from django.template import loader
 from django.template import RequestContext
 from django.contrib import messages
 
+
 class BusFilter:
     time = 15
     speed = 1
     startDate = ""
     endDate= ""
-    route_id = []
-    vehicle_ids = []
+    route_id = ""
+    vehicle_ids = ""
     vehicle_state = False
 
 
@@ -40,20 +41,12 @@ def particular_buses_multiple(request):
     #     for i in range(0,len(filterBusesobj.vehicle_id)):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
     #     timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
-    print ("---------------\n",filterObj.__dict__,"\n-----------------",filterObj.vehicle_ids,"\n")
 
-    while(True):
-        if(filterObj.startDate < filterObj.endDate):
-            if(len(filterObj.route_id) > 0 and len(filterObj.vehicle_ids) > 0):
-                for i in range(0,len(filterObj.vehicle_ids)):
-                    filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
-                timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
-            if(filtered_routes.count() > 0):
-                break
-            filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
-        else:
-            break
-    if(str != filterObj.startDate):
+    if(filterObj.startDate < filterObj.endDate):
+        if(len(filterObj.route_id) > 0 and filterObj.route_id[0] != -1 and len(filterObj.vehicle_ids) > 0):
+            for i in range(0,len(filterObj.route_id)):
+                filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
+            timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
         filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
     # print("filterrrrrrrrrr "+str(filtered_routes))
     print ("LENGTH ",(filtered_routes))
@@ -90,11 +83,16 @@ class playBackView(DetailView):
         self.formsrender={}
         timerouteform = Timerouteform(request.POST)
         print (request.POST)
-        if(timerouteform.is_valid() or 'vehicle_id_f' in timerouteform.errors):
-                
+        if(timerouteform.is_valid()):
+
+            
 
             print ("vehicle State ",filterObj.vehicle_state)
-            if(filterObj.vehicle_state==False):
+            if(filterObj.vehicle_state == True):
+                timerouteform = Timerouteform()
+                filterObj.vehicle_state = False
+
+            elif(filterObj.vehicle_state==False):
                 clean_route_id = timerouteform.cleaned_data['route_id_f']
                 startDateTime = timerouteform.cleaned_data['startDateTime']
                 endDateTime = timerouteform.cleaned_data['endDateTime']
@@ -104,31 +102,28 @@ class playBackView(DetailView):
                 filterObj.route_id = clean_route_id
                 filterObj.startDate = cleanStartDateTime
                 filterObj.endDate = cleanEndDateTime
-                
                 print ("Showing Vehicles")
-                timerouteform.showvehicles()
+                timerouteform = Timerouteform({'oldform':timerouteform,'route_id':filterObj.route_id,
+                'stime':filterObj.startDate,'etime':filterObj.endDate})
+                # timerouteform.showvehicles()
                 filterObj.vehicle_state = True
                 
                 # timerouteform = Timerouteform({'oldform':timerouteform})
             else:
-                print ("Hiding Vehicles")
-                filterObj.vehicle_state = False
-                request.POST = request.POST.copy()
-                filterObj.vehicle_ids = request.POST.pop('vehicle_id_f')
-                print ("printing here ",filterObj.vehicle_ids)
-
-                
+                if(filterObj.startDate > filterObj.endDate):
+                    messages.info(request, 'Start date should be less than end date')
+                else:
+                    messages.info(request, 'Invalid input received')                                   
                 
                 # request.POST = request.POST.update({'vehicle_id_f':[]})
                 # print (filterObj.vehicle_ids)
-                timerouteform.hidevehicles()
-            print ("REQUEST ",request.POST)
+            #     timerouteform.hidevehicles()
+            # print ("REQUEST ",request.POST)
         else:
             print ("Not Valid Form")
             print (timerouteform.errors)
         self.formsrender['timeroute'] = timerouteform
-        return render(request, self.template_name, self.formsrender)      
-
+        return render(request, self.template_name, self.formsrender)
 
         # if(timerouteform.is_valid()):
         #     timeroutevehicleform = VehicleForm(request.POST)

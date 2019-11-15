@@ -6,7 +6,19 @@ from django.utils import timezone
 from datetime import timedelta
 from django.forms import DateTimeField
 from django.utils.dateparse import parse_datetime
+import pandas as pd
+import numpy as np
 
+import os 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+print ("cur path ",dir_path)
+routes_all = pd.read_csv('static/buses_static_data/routes.txt')
+routes_all_d = {}
+for i in range(len(routes_all)):
+    routes_all_d[int(routes_all['route_id'][i])] = routes_all['route_long_name'][i]
+
+# routes_all = routes_all.drop(columns=['route_short_name','route_type'])
+# routes_all = np.array(routes_all)
 def appendTimeZone(playTime):
     playTime = str(playTime)
     timeList = playTime.split('+')
@@ -25,11 +37,12 @@ def getvehicles(routeId, startTime,endTime):
     return vehicles
 
 def getroutes():
-    queryset_route = Buses.objects.order_by('route_id','timestamp').distinct('route_id').values('route_id')
+    # queryset_route = Buses.objects.order_by('route_id','timestamp').distinct('route_id').values('route_id')
     routes = []
     # routes.append((-1,'---------'))
-    for i in queryset_route:
-        routes.append((i['route_id'],i['route_id']))
+
+    for i in routes_all_d.keys():
+        routes.append((i,routes_all_d[i] + " - " + str(i)))
     return routes
 
 class Timerouteform(forms.Form):
@@ -51,8 +64,8 @@ class Timerouteform(forms.Form):
     # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
     # #print("heloooooooooooooooooooooooooo"+str(route_id_f))
 
-    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
-    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-mm-dd HH:MM:SS'}))
+    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
+    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
     route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
     vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget= forms.HiddenInput,required=False)
     vehicle_state = False
@@ -116,16 +129,23 @@ class Timerouteform(forms.Form):
         # print (choices[0])
         self.fields['vehicle_id_f'] = forms.ChoiceField(label = "Vehicle Ids",
                 required=False,widget=Select2Widget,choices=choices)
+        self.fields['route_id_f'].disabled=True
+        self.fields['startDateTime'].disabled=True
+        self.fields['endDateTime'].disabled=True
         # self.fields['vehicle_id_f'].widget = Select2Widget()
         # self.fields['vehicle_id_f'].initial = choices[0][0]
         # self.fields['vehicle_id_f'].required = True
         # super(Timerouteform, self).__init__(*args, **kwargs)
         
     def hidevehicles(self):
+        self.fields.pop('vehicle_id_f')
         # choices = getvehicles(routeId= self.getcleanedroutes(),
         # startTime=appendTimeZone(self.getcleanedstarttime()),
         # endTime=appendTimeZone(self.getcleanedendtime()))
-        self.fields['vehicle_id_f'].widget = forms.HiddenInput()
+        # self.fields['vehicle_id_f'].widget = forms.HiddenInput()
+        self.fields['route_id_f'].disabled= False
+        self.fields['startDateTime'].disabled= False
+        self.fields['endDateTime'].disabled= False
         # widget=Select2Widget
 
 # class VehicleForm(forms.Form):
