@@ -11,13 +11,13 @@
     
        
     
+    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" ></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js" ></script>
     {% leaflet_css %}
-    {{ form.media.css }}
-    {{form.media.js}}
+
+    {{timeroute.media}}
 
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
@@ -29,9 +29,9 @@
     
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    
+    <script defer src="{% static 'js/jquerycode.js' %}"></script>
+
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
     <script src="{% static 'js/leaflet-liveupdate.js' %}"></script>
     <script src="{% static 'js/leaflet-messagebox.js' %}"></script>
@@ -39,9 +39,6 @@
 
 
         <script type="text/javascript" src="{% static 'js/leaflet.ajax.js' %}" >	</script>
-
-
-    {{form.media.js}}
 
     <script type="text/javascript">
     iconsmap = {}
@@ -120,7 +117,6 @@
     <script>
         alert("{{ message }}")
     </script> {% endif %} {% endfor %} {% endif %}
-    
 </head>
 <body>
 
@@ -135,16 +131,22 @@
                         <!--  -->
                         <div class="buttonHolder">
 
+                                <!-- <div class="well">
+                                        <div id="datetimepicker1" class="input-append date">
+                                          <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>
+                                          <span class="add-on">
+                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                                            </i>
+                                          </span>
+                                        </div>
+                                      </div> -->
                         <form action="/playback/" method="post" >
                             {% csrf_token %}
                             {{ timeroute|crispy}}
-                            <button type="submit" name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'playback:playback' %}'" >Reset</button>
-
-                            <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
-                            
-    
-
                         </form>
+                        <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
+                        <button type="submit" name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'playback:playback' %}'" >Reset</button>
+
                                           </div>
 
                         <!-- <input type="submit" name="reset" class="btn btn-success" value="reset"> -->
@@ -155,26 +157,33 @@
                     <div id="content">
                 
                         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                            <div class="container-fluid">
-                
-                                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                                    <!-- <i class="fas fa-align-left"></i> -->
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                                <!-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                    <i class="fas fa-align-justify"></i>
-                                </button> -->
-                
-                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                        <ul class="nav navbar-nav ml-auto">
-                                                <li class="nav-item active">
-                                                    <a class="nav-link" href='{% url 'stops:homepage' %}'>Home</a>
+                                <div class="container-fluid">
+
+                                        <button type="button" id="sidebarCollapse" class="btn btn-info">
+                                                        <!-- <i class="fas fa-align-left"></i> -->
+                                                        <span></span>
+                                                        <span></span>
+                                                        <span></span>
+                                                    </button>
+                                        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                                        <i class="fas fa-align-justify"></i>
+                                                    </button>
+                    
+                                        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                                            <ul class="nav navbar-nav ml-auto">
+                                                
+                                                <li class="nav-item ">
+                                                    <a class="nav-link" href='/'>Home</a>
                                                 </li>
-                                        </ul>
-                                </div>
-                            </div>
+                                                <li class="nav-item active">
+                                                    <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
                         </nav>
                 
                         {% leaflet_map "gis" callback="map_points"  %}

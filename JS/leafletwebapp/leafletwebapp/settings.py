@@ -42,8 +42,14 @@ INSTALLED_APPS = [
     'playback.apps.PlaybackConfig',
     'easy_select2',
     'crispy_forms',
+    'bootstrap_datepicker_plus',
+    'bootstrap4',
 
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

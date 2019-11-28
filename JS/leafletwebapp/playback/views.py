@@ -34,6 +34,27 @@ filterObj = BusFilter()
 #         timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
 ###############################################################
 
+
+def updatestart(request):
+    # filterObj.startDate 
+    # print (request)
+    filterObj.startDate = request.GET.get('start_time')
+    print (request.GET.get('start_time'))
+    
+    return HttpResponse()
+
+def updateend(request,end_time):
+    filterObj.endDate = request.GET.get('end_time')
+    print (filterObj.endDate)
+    
+    return HttpResponse()
+
+def vehiclesonroute(request):
+    filterObj.route_id = request.GET.get('route_id')
+    # queryres = Buses.objects.filter(route'_id=filterObj.route_id).values('vehicle_id')
+    # print ("got in ",route_id)
+    return HttpResponse()
+
 def particular_buses_multiple(request):
     filtered_routes = Buses.objects.none()
     # if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
@@ -73,7 +94,7 @@ def appendTimeZone(playTime):
     return newTime
 
 
-class playBackView(DetailView):
+class playBackView(TemplateView):
     template_name = 'playback.html'
     model = Buses
     formsrender = {}

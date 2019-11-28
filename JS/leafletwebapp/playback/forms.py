@@ -5,8 +5,10 @@ from stops.models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from django.forms import DateTimeField
+from bootstrap_datepicker_plus import DateTimePickerInput  
 from django.utils.dateparse import parse_datetime
 import pandas as pd
+
 import numpy as np
 
 import os 
@@ -64,10 +66,10 @@ class Timerouteform(forms.Form):
     # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
     # #print("heloooooooooooooooooooooooooo"+str(route_id_f))
 
-    startDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
-    endDateTime= DateTimeField(input_formats=["%Y-%m-%d %H:%M:%S"],widget=forms.TextInput(attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS'}))
-    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget)
-    vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget= forms.HiddenInput,required=False)
+    startDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'starttime'}),required=True)
+    endDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'endtime'}),required=True)
+    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget(attrs={'id':'route_id_field'}),required=False)
+    vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget=Select2Widget(attrs={'id':'vehicle_id_field'}),required=True)
     vehicle_state = False
     # def __init__(self,timeroute, *args,**kwargs):
     #     print ("Inside new constructor")
