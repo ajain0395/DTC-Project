@@ -42,8 +42,14 @@ INSTALLED_APPS = [
     'playback.apps.PlaybackConfig',
     'easy_select2',
     'crispy_forms',
+    'bootstrap_datepicker_plus',
+    'bootstrap4',
 
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -158,7 +164,7 @@ LEAFLET_CONFIG = {
 
     'DEFAULT_CENTER' : (28.613939, 77.209023),
     'MAX_ZOOM' : MAXZOOM_MAP,
-    'MIN_ZOOM' : 10,
+    'MIN_ZOOM' : 9,
     'DEFAULT_ZOOM' :11,
     'SCALE':'both',
     'ATTRIBUTION_PREFIX' : "DTC_PROJECT",

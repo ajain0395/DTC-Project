@@ -11,14 +11,15 @@ from django.utils.dateparse import parse_datetime
 from .forms import Timerouteform
 from django.template import loader
 from django.template import RequestContext
+from django.contrib import messages
 
 class BusFilter:
     time = 15
     speed = 1
     startDate = ""
     endDate= ""
-    route_id = ""
-    vehicle_ids = ""
+    route_id = []
+    vehicle_ids = []
     vehicle_state = False
 
 
@@ -33,18 +34,47 @@ filterObj = BusFilter()
 #         timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
 ###############################################################
 
+
+def updatestart(request):
+    # filterObj.startDate 
+    # print (request)
+    filterObj.startDate = request.GET.get('start_time')
+    print (request.GET.get('start_time'))
+    
+    return HttpResponse()
+
+def updateend(request,end_time):
+    filterObj.endDate = request.GET.get('end_time')
+    print (filterObj.endDate)
+    
+    return HttpResponse()
+
+def vehiclesonroute(request):
+    filterObj.route_id = request.GET.get('route_id')
+    # queryres = Buses.objects.filter(route'_id=filterObj.route_id).values('vehicle_id')
+    # print ("got in ",route_id)
+    return HttpResponse()
+
 def particular_buses_multiple(request):
     filtered_routes = Buses.objects.none()
     # if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
     #     for i in range(0,len(filterBusesobj.vehicle_id)):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
     #     timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
+    print ("---------------\n",filterObj.__dict__,"\n-----------------",filterObj.vehicle_ids,"\n")
 
-    if(filterObj.startDate < filterObj.endDate):
-        if(len(filterObj.route_id) > 0 and filterObj.route_id[0] != -1 and len(filterObj.vehicle_ids) > 0):
-            for i in range(0,len(filterObj.route_id)):
-                filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
-            timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
+    while(True):
+        if(filterObj.startDate < filterObj.endDate):
+            if(len(filterObj.route_id) > 0 and len(filterObj.vehicle_ids) > 0):
+                for i in range(0,len(filterObj.vehicle_ids)):
+                    filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
+                timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
+            if(filtered_routes.count() > 0):
+                break
+            filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
+        else:
+            break
+    if(str != filterObj.startDate):
         filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
     # print("filterrrrrrrrrr "+str(filtered_routes))
     print ("LENGTH ",(filtered_routes))
@@ -64,7 +94,7 @@ def appendTimeZone(playTime):
     return newTime
 
 
-class playBackView(DetailView):
+class playBackView(TemplateView):
     template_name = 'playback.html'
     model = Buses
     formsrender = {}
@@ -82,17 +112,20 @@ class playBackView(DetailView):
         timerouteform = Timerouteform(request.POST)
         print (request.POST)
         if(timerouteform.is_valid() or 'vehicle_id_f' in timerouteform.errors):
-            clean_route_id = timerouteform.cleaned_data['route_id_f']
-            startDateTime = timerouteform.cleaned_data['startDateTime']
-            endDateTime = timerouteform.cleaned_data['endDateTime']
                 
-            cleanStartDateTime = appendTimeZone(startDateTime)
-            cleanEndDateTime = appendTimeZone(endDateTime)
-            filterObj.route_id = clean_route_id
-            filterObj.startDate = cleanStartDateTime
-            filterObj.endDate = cleanEndDateTime
+
             print ("vehicle State ",filterObj.vehicle_state)
             if(filterObj.vehicle_state==False):
+                clean_route_id = timerouteform.cleaned_data['route_id_f']
+                startDateTime = timerouteform.cleaned_data['startDateTime']
+                endDateTime = timerouteform.cleaned_data['endDateTime']
+                    
+                cleanStartDateTime = appendTimeZone(startDateTime)
+                cleanEndDateTime = appendTimeZone(endDateTime)
+                filterObj.route_id = clean_route_id
+                filterObj.startDate = cleanStartDateTime
+                filterObj.endDate = cleanEndDateTime
+                
                 print ("Showing Vehicles")
                 timerouteform.showvehicles()
                 filterObj.vehicle_state = True
@@ -103,7 +136,7 @@ class playBackView(DetailView):
                 filterObj.vehicle_state = False
                 request.POST = request.POST.copy()
                 filterObj.vehicle_ids = request.POST.pop('vehicle_id_f')
-                print (filterObj.vehicle_ids)
+                print ("printing here ",filterObj.vehicle_ids)
 
                 
                 

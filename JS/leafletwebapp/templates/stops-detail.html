@@ -1,156 +1,167 @@
 <!DOCTYPE html>
 <html>
-        {% load leaflet_tags %}
-        {% load static %}
-        {% load crispy_forms_tags %}
+{% load leaflet_tags %} 
+{% load static %} 
+{% load crispy_forms_tags %}
 
 <head>
-    <meta charset="UTF-8">   
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<!-- 
+    <script src="{% static 'js/jquery.min.js' %}"></script>
 
-    
-       
-    
-
-    <script src="{% static 'js/jquery.min.js' %}" ></script>
-
-    <script src="{% static 'js/jquery.js' %}" ></script>
-    {% leaflet_css %}
-    {{ form.media.css }}
+    <script src="{% static 'js/jquery.js' %}"></script> -->
+    {% leaflet_css %} 
+    {{ form.media.css }} 
     {{form.media.js}}
-
+    {{form.media}} 
     {% leaflet_js %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'dist/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'dist/leaflet-liveupdate.css' %}" />
-    <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
-    <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-liveupdate.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-messagebox.css' %}" />
 
-    
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
 
-    
+
+
+    <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script> -->
+
+
+    <!-- Font Awesome JS -->
+    <script defer src="{% static 'js/solid.js' %}"></script>
+    <script defer src="{% static 'js/jquerycode.js' %}"></script>
+
+    <script defer src="{% static 'js/fontawesome.js' %}"></script>
+
+
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
-    <script src="{% static 'dist/leaflet-liveupdate.js' %}"></script>
-    <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+    <script src="{% static 'js/leaflet-liveupdate.js' %}"></script>
+    <script src="{% static 'js/leaflet-messagebox.js' %}"></script>
 
 
-        <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}" >	</script>
+    <script type="text/javascript" src="{% static 'js/leaflet.ajax.js' %}">
+    </script>
 
 
 
-            <script type="text/javascript">
+    <script type="text/javascript">
+        iconsmap = {}
 
-iconsmap = {}
+        function returnicon(iconnumber) {
+            var busurl = "/static/bus_icon/" + iconnumber + ".png";
+            return new L.Icon({
+                iconUrl: busurl,
+                iconSize: [30, 45],
+                iconAnchor: [12, 45],
+                popupAnchor: [1, -34],
+                shadowSize: [45, 45]
+            })
+        }
 
-function returnicon(iconnumber)
-{
-  var busurl = "/static/bus_icon/"+iconnumber+".png";
- return new L.Icon({
-iconUrl: busurl,
-iconSize: [30, 45],
-iconAnchor: [12, 45],
-popupAnchor: [1, -34],
-shadowSize: [45, 45]
-})
-}
-function getnewicon(vehicle_id)
-{ 
-        if( typeof getnewicon.counter == 'undefined' ) {
-          getnewicon.counter = 0;
-      }
-      if(vehicle_id in iconsmap)
-      {
-        
-      }
-      else{
-        iconsmap[vehicle_id] = returnicon(getnewicon.counter%13);
-        getnewicon.counter++;
-      }
-        
-        return iconsmap[vehicle_id];
-}
-function getbusstops()
-{
-    var stops_var = new L.GeoJSON.AJAX("{% url 'stops:all-stops' %}",
-                {
-			pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon:new L.Icon({
-                    iconUrl: "{% static 'bus_icon/stop.png' %}",
-                    iconSize: [15, 22],
-                    iconAnchor: [6, 22],
-                    popupAnchor: [1, -34],
-                    shadowSize: [22, 22]
-                    }),
-                    title: feature.properties.stop_name,
-                    riseOnHover: true
-                });
-            },
-			onEachFeature: function(feature,layer){
-				// layer.bindPopup(feature.properties.stop_name.toString());
-                layer.bindPopup("Stop Name: "+feature.properties.stop_name.toString() +
-                 "<br>"+"Stop Code: " + feature.properties.stop_code.toString() +
-                 "<br>"+"Stop Id: " + feature.properties.stop_id.toString() 
-                 );
-			}
-		});
-        return stops_var;
-}
+        function getnewicon(vehicle_id) {
+            if (typeof getnewicon.counter == 'undefined') {
+                getnewicon.counter = 0;
+            }
+            if (vehicle_id in iconsmap) {
+
+            } else {
+                iconsmap[vehicle_id] = returnicon(getnewicon.counter % 13);
+                getnewicon.counter++;
+            }
+
+            return iconsmap[vehicle_id];
+        }
+
+        function getbusstops() {
+            var stops_var = new L.GeoJSON.AJAX("{% url 'stops:all-stops' %}", {
+                pointToLayer: function(feature, latlng) {
+                    return L.marker(latlng, {
+                        icon: new L.Icon({
+                            iconUrl: "{% static 'bus_icon/stop.png' %}",
+                            iconSize: [15, 22],
+                            iconAnchor: [6, 22],
+                            popupAnchor: [1, -34],
+                            shadowSize: [22, 22]
+                        }),
+                        title: feature.properties.stop_name,
+                        riseOnHover: true
+                    });
+                },
+                onEachFeature: function(feature, layer) {
+                    // layer.bindPopup(feature.properties.stop_name.toString());
+                    layer.bindPopup("Stop Name: " + feature.properties.stop_name.toString() +
+                        "<br>" + "Stop Code: " + feature.properties.stop_code.toString() +
+                        "<br>" + "Stop Id: " + feature.properties.stop_id.toString()
+                    );
+                }
+            });
+            return stops_var;
+        }
 
         var stops_points = getbusstops();
-        function returnfilterbuses()
-        {
-            return new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}",
-                {
-			pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon:getnewicon(feature.properties.vehicle_id),
-                    title: feature.properties.vehicle_id,
-                    riseOnHover: true
-                });
-            },
-			onEachFeature: function(feature,layer){
-				// layer.bindPopup(feature.properties.stop_name.toString());
-                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
-                 "<br>"+"Speed: " + feature.properties.speed.toString() +
-                 "<br>"+"Route id: " + feature.properties.route_id.toString()
-                 );
-			}
-		});
+
+        function returnfilterbuses() {
+            return new L.GeoJSON.AJAX("{% url 'stops:filtered-buses' %}", {
+                pointToLayer: function(feature, latlng) {
+                    return L.marker(latlng, {
+                        icon: getnewicon(feature.properties.vehicle_id),
+                        title: feature.properties.vehicle_id,
+                        riseOnHover: true
+                    });
+                },
+                onEachFeature: function(feature, layer) {
+                    // layer.bindPopup(feature.properties.stop_name.toString());
+                    layer.bindPopup("Bus Number: " + feature.properties.vehicle_id.toString() +
+                        "<br>" + "Speed: " + feature.properties.speed.toString() +
+                        "<br>" + "Route id: " + feature.properties.route_id.toString()
+                    );
+                }
+            });
         }
 
 
-                function map_init(map, options) {
+        function map_init(map, options) {
+            map.removeControl(map.zoomControl);
+            var zoomHome = L.Control.zoomHome({
+                position: 'topleft'
+            });
+            zoomHome.addTo(map);
 
-                    map.removeControl(map.zoomControl);
-                    var zoomHome = L.Control.zoomHome({position: 'topleft'});
-                    zoomHome.addTo(map);
+            var datapoints = returnfilterbuses();
+            datapoints.addTo(map);
+            var controlLayers = map.layerscontrol;
 
-                var datapoints = returnfilterbuses();
-        datapoints.addTo(map);
-        var controlLayers = map.layerscontrol;
+            controlLayers.addOverlay(stops_points, "Bus Stops");
 
-        controlLayers.addOverlay(stops_points, "Bus Stops");
+            L.control.liveupdate({
+                    update_map: function() {
+                        // datapoints.addTo(map);
+                        // newdatapoints = returnfilterbuses();
+                        // map.removeLayer(datapoints);
+                        // datapoints = newdatapoints;
+                        datapoints.refresh("{% url 'stops:filtered-buses' %}");
 
-			L.control.liveupdate ({
-				update_map: function () {
-        // datapoints.addTo(map);
-        // newdatapoints = returnfilterbuses();
-        // map.removeLayer(datapoints);
-        // datapoints = newdatapoints;
-        datapoints.refresh("{% url 'stops:filtered-buses' %}");
-					
-				},
-				position: 'topleft',
-				interval: 5000
-			})
-			.addTo(map)
-			.stopUpdating();
-            }  
-        </script>
+                    },
+                    position: 'topleft',
+                    interval: 10000
+                })
+                .addTo(map)
+                .stopUpdating();
+        }
+    </script>
     <title>DTC Project</title>
 
     <!-- {% if messages %}
@@ -160,67 +171,71 @@ function getbusstops()
         {% endfor %}
     </ul>
     {% endif %} -->
-    {% if messages %}
-    {% for message in messages %}
-     {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
-
-    {% endfor %}
-
-{% endif %}
+    {% if messages %} {% for message in messages %} {% if message.tags %}
+    <script>
+        alert("{{ message }}")
+    </script> {% endif %} {% endfor %} {% endif %}
 
 </head>
+
 <body>
 
-            <div class="wrapper">
-                    <!-- Sidebar  -->
-                    <nav id="sidebar">
-                        <div class="sidebar-header">
-                            <h3>Filter Buses</h3>
-                        </div>
-                
-                        
-                        <!--  -->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Filter Buses</h3>
+            </div>
 
-                        <form action="/" method="post" >
-                            {% csrf_token %}
-                            {{ form|crispy}}
-                            <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
-                            
-                        </form>                    
-                        <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->
-                    </nav>
-                
-                    <!-- Page Content  -->
-                    <div id="content">
-                
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                            <div class="container-fluid">
-                
-                                <button type="button" id="sidebarCollapse" class="btn btn-info">
+
+            <!--  -->
+
+            <form action="/" method="post">
+                {% csrf_token %} 
+                {{ form|crispy}}
+                <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
+
+            </form>
+            <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
                                     <!-- <i class="fas fa-align-left"></i> -->
                                     <span></span>
                                     <span></span>
                                     <span></span>
                                 </button>
-                                <!-- <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                     <i class="fas fa-align-justify"></i>
-                                </button> -->
-            
-                                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                                        <ul class="nav navbar-nav ml-auto">
-                                                <li class="nav-item active">
-                                                    <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
-                                                </li>
-                                                <li class="nav-item active">
-                                                    <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
-                                                </li>
-                                        </ul>
-                                </div>
-                            </div>
-                        </nav>
-                
-                        {% leaflet_map "gis" callback="map_init" %}
+                                </button>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            
+                            <li class="nav-item active">
+                                <a class="nav-link" href='/'>Home</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </nav>
+
+            {% leaflet_map "gis" callback="map_init" %}
+        </div>
+    </div>
+
 </body>
+
 </html>

@@ -5,6 +5,7 @@ from .models import Buses
 from django.utils import timezone
 from datetime import timedelta
 from .views import FilterBuses
+from playback.forms import routes_all_d
 
 # from django_select2.forms import (
 #     HeavySelect2MultipleWidget, HeavySelect2Widget, ModelSelect2MultipleWidget,
@@ -32,7 +33,7 @@ def getroutes():
     # print ('NewForm')
     
     for i in queryset_route:
-        routes.append((i['route_id'],i['route_id']))
+        routes.append((i['route_id'],routes_all_d[i['route_id']] + " - "+str(i['route_id'])))
     return routes
 
 class RVForm(forms.Form):
