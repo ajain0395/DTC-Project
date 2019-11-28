@@ -12,13 +12,14 @@ from .forms import Timerouteform
 from django.template import loader
 from django.template import RequestContext
 from django.contrib import messages
+import json
 
 class BusFilter:
     time = 15
     speed = 1
-    startDate = ""
-    endDate= ""
-    route_id = []
+    startDate = timezone.now()
+    endDate= timezone.now()
+    route_id = 0
     vehicle_ids = []
     vehicle_state = False
 
@@ -35,25 +36,33 @@ filterObj = BusFilter()
 ###############################################################
 
 
+def playbackresponse():
+    queryres = Buses.objects.filter(route_id=filterObj.route_id,timestamp__gte=filterObj.startDate,timestamp__lte=filterObj.endDate).distinct('vehicle_id').values('vehicle_id')
+    # print (queryres)
+    q_ls = list(queryres)
+    print (q_ls)
+    return json.dumps(q_ls)
+
 def updatestart(request):
     # filterObj.startDate 
     # print (request)
-    filterObj.startDate = request.GET.get('start_time')
-    print (request.GET.get('start_time'))
+    filterObj.startDate = appendTimeZone(request.GET.get('start_time'))
+    print (filterObj.startDate)
     
-    return HttpResponse()
+    return HttpResponse(playbackresponse(),content_type='json')
 
 def updateend(request,end_time):
-    filterObj.endDate = request.GET.get('end_time')
+    filterObj.endDate = appendTimeZone(request.GET.get('end_time'))
     print (filterObj.endDate)
-    
-    return HttpResponse()
+    return HttpResponse(playbackresponse(),content_type='json')
 
 def vehiclesonroute(request):
-    filterObj.route_id = request.GET.get('route_id')
-    # queryres = Buses.objects.filter(route'_id=filterObj.route_id).values('vehicle_id')
+    filterObj.route_id = request.GET.get('route_id')    
+    # json_subcat = serialize("json", queryres)
+    # print (json_subcat)
+    return HttpResponse(playbackresponse(),content_type='json')
     # print ("got in ",route_id)
-    return HttpResponse()
+    # return HttpResponse()
 
 def particular_buses_multiple(request):
     filtered_routes = Buses.objects.none()

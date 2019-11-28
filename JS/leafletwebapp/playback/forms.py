@@ -8,6 +8,8 @@ from django.forms import DateTimeField
 from bootstrap_datepicker_plus import DateTimePickerInput  
 from django.utils.dateparse import parse_datetime
 import pandas as pd
+import json
+
 
 import numpy as np
 
@@ -66,11 +68,10 @@ class Timerouteform(forms.Form):
     # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
     # #print("heloooooooooooooooooooooooooo"+str(route_id_f))
 
-    startDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'starttime'}),required=True)
-    endDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'endtime'}),required=True)
-    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget(attrs={'id':'route_id_field'}),required=False)
+    startDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'starttime'}),required=True,initial=timezone.now())
+    endDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'endtime'}),required=True,initial=timezone.now())
+    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget(attrs={'id':'route_id_field'}),required=True)
     vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget=Select2Widget(attrs={'id':'vehicle_id_field'}),required=True)
-    vehicle_state = False
     # def __init__(self,timeroute, *args,**kwargs):
     #     print ("Inside new constructor")
     #     super(Timerouteform, timeroute).__init__(*args, **kwargs)
@@ -85,8 +86,8 @@ class Timerouteform(forms.Form):
     #     self.fields['vehicle_id_f'] = forms.ChoiceField(label = "Vehicle Ids",
     #     required=True,widget=Select2Widget,choices=choices)
 
-    def __init__(self, *args,**kwargs):
-        super(Timerouteform, self).__init__(*args, **kwargs)
+    # def __init__(self, *args,**kwargs):
+    #     super(Timerouteform, self).__init__(*args, **kwargs)
 
         # if(len(args) > 0):
         #     if('oldform' in args[0]):
