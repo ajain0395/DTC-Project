@@ -7,5 +7,4 @@ app_name = 'download'
 
 urlpatterns = [
     url(r'^download/$', views.downloadView.as_view(), name='download'),
-      
 ]
