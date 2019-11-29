@@ -74,6 +74,23 @@ def vehiclesonroute(request):
 
 def particular_buses_multiple(request):
     filtered_routes = Buses.objects.none()
+    # if(filterObj.startDate == None):
+    #     messages.info(request, 'Invalid Start Date')
+    #     return HttpResponse(json.dumps([]),content_type='json')
+    # elif(filterObj.endDate == None):
+    #     messages.info(request, 'Invalid End Date')
+    #     return HttpResponse(json.dumps([]),content_type='json')
+    # elif(filterObj.vehicle_ids == -1 or filterObj.vehicle_ids == None):
+    #     messages.info(request, 'Invalid Vehicle Id')
+    #     return HttpResponse(json.dumps([]),content_type='json')
+    # elif(filterObj.route_id == None or filterObj.route_id == -1):
+    #     messages.info(request, 'Invalid Route')
+    #     return HttpResponse(json.dumps([]),content_type='json')
+    # elif(filterObj.startDate > filterObj.endDate):
+    #     messages.info(request, 'Start Date cannot be greater than End Date')
+    #     return HttpResponse(json.dumps([]),content_type='json')
+    
+
     # if(len(filterBusesobj.vehicle_id) > 0 and filterBusesobj.vehicle_id[0] != -1):
     #     for i in range(0,len(filterBusesobj.vehicle_id)):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],

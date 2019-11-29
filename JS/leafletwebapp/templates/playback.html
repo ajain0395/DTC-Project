@@ -82,80 +82,23 @@
 
             $("#playbackcheck").click( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
-
-
-/////////////////////////////////
-const xhr = new XMLHttpRequest();
-    xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
-    xhr.onreadystatechange = xhrCallback;
-    xhr.send();
-
-    function xhrCallback() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
-        const trackplayback = L.trackplayback(data, map, {
-          targetOptions: {
-            useImg: true,
-            imgUrl: "{% static 'bus_icon/ship.png' %}"
-          }
-        });
-        const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
-        trackplaybackControl.addTo(map);
-      }
-    }
-        ///////////////////////////
-
-
-
-
-
-        // var datapoints = $.ajax({
-        //     url:"{% url 'playback:filtered-routes' %}",
-        //     type: 'get',
-        //     // data:  {vehicle_id:$(this).val()},
-        //      success: function(resp){
-        //         //  playbackresponse(resp);  
-        //         console.log(resp);  
-        //         return resp;
-        //        }
-    
-        // });
-        // console.log(datapoints);
-
-
-        //          var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
-        //         {
-		// 	pointToLayer: function (feature, latlng) {
-        //         return L.marker(latlng, {
-        //             icon:getnewicon(feature.properties.vehicle_id),
-        //             title: feature.properties.vehicle_id,
-        //             riseOnHover: true
-        //         });
-        //     },
-		// 	onEachFeature: function(feature,layer){
-        //         layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
-        //          "<br>"+"Speed: " + feature.properties.speed.toString() +
-        //          "<br>"+"Route id: " + feature.properties.route_id.toString()
-        //          );
-		// 	}
-        // });
-        // const data = JSON.parse(datapoints.responseJSON);
-        // var data = datapoints.responseJSON;
-
-        // const trackplayback = L.trackplayback(data, map,{
-        //   targetOptions: {
-        //     useImg: true,
-        //     imgUrl: "{% static 'bus_icon/1.png' %}"
-        //   }
-        // });
-        // const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
-
-        // trackplaybackControl.addTo(map);
-
-
-        // var playback = new L.Playback(map, datapoints, onPlaybackTimeChange, options);
-
-        // return datapoints;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
+        xhr.onreadystatechange = xhrCallback;
+        xhr.send();
+        function xhrCallback() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            const trackplayback = L.trackplayback(data, map, {
+            targetOptions: {
+                useImg: true,
+                imgUrl: "{% static 'bus_icon/ship.png' %}"
+            }
+            });
+            const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
+            trackplaybackControl.addTo(map);
+        }
+        } 
     });
 
         //         var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
@@ -199,7 +142,8 @@ const xhr = new XMLHttpRequest();
     {% if messages %} {% for message in messages %} {% if message.tags %}
     <script>
         alert("{{ message }}")
-    </script> {% endif %} {% endfor %} {% endif %}
+    </script> 
+    {% endif %} {% endfor %} {% endif %}
 </head>
 <body>
 
