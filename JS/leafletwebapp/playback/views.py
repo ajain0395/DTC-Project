@@ -6,6 +6,8 @@ from django.shortcuts import render
 from django.core.serializers import serialize
 from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
+from datetime import datetime
+
 from datetime import timedelta
 from django.utils.dateparse import parse_datetime
 from .forms import Timerouteform
@@ -20,7 +22,7 @@ class BusFilter:
     startDate = timezone.now()
     endDate= timezone.now()
     route_id = 0
-    vehicle_ids = []
+    vehicle_ids = -1
     vehicle_state = False
 
 
@@ -40,24 +42,30 @@ def playbackresponse():
     queryres = Buses.objects.filter(route_id=filterObj.route_id,timestamp__gte=filterObj.startDate,timestamp__lte=filterObj.endDate).distinct('vehicle_id').values('vehicle_id')
     # print (queryres)
     q_ls = list(queryres)
-    print (q_ls)
+    # print (q_ls)
     return json.dumps(q_ls)
 
 def updatestart(request):
     # filterObj.startDate 
     # print (request)
     filterObj.startDate = appendTimeZone(request.GET.get('start_time'))
-    print (filterObj.startDate)
+    print ("start_time updated ",filterObj.startDate)
     
     return HttpResponse(playbackresponse(),content_type='json')
 
-def updateend(request,end_time):
+def updateend(request):
     filterObj.endDate = appendTimeZone(request.GET.get('end_time'))
-    print (filterObj.endDate)
+    print ("end_time updated ",filterObj.endDate)
     return HttpResponse(playbackresponse(),content_type='json')
 
+def updatevehicle(request):
+    filterObj.vehicle_ids = request.GET.get('vehicle_id')
+    print ("vehicle_id updated ",filterObj.vehicle_ids)
+    return HttpResponse()  
+
 def vehiclesonroute(request):
-    filterObj.route_id = request.GET.get('route_id')    
+    filterObj.route_id = request.GET.get('route_id')
+    print ("route_id_updated ",filterObj.route_id)    
     # json_subcat = serialize("json", queryres)
     # print (json_subcat)
     return HttpResponse(playbackresponse(),content_type='json')
@@ -71,28 +79,38 @@ def particular_buses_multiple(request):
     #         filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=filterBusesobj.vehicle_id[i],
     #     timestamp__gte=(timezone.now()-timedelta(minutes=filterBusesobj.time))).order_by('-timestamp')[:filterBusesobj.top_entries])
     print ("---------------\n",filterObj.__dict__,"\n-----------------",filterObj.vehicle_ids,"\n")
-
-    while(True):
-        if(filterObj.startDate < filterObj.endDate):
-            if(len(filterObj.route_id) > 0 and len(filterObj.vehicle_ids) > 0):
-                for i in range(0,len(filterObj.vehicle_ids)):
-                    filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
-                timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
-            if(filtered_routes.count() > 0):
-                break
-            filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
-        else:
-            break
-    if(str != filterObj.startDate):
-        filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
+    if(filterObj.vehicle_ids == -1):
+        return HttpResponse()
+    filtered_routes = Buses.objects.filter(route_id=filterObj.route_id,vehicle_id=filterObj.vehicle_ids,
+    timestamp__gte=filterObj.startDate,timestamp__lte=filterObj.endDate).order_by('timestamp').values('latitude','longitude','timestamp')
+    q_ls = []
+    for i in filtered_routes:
+        tmp = {}
+        tmp['lng'] = i['longitude']
+        tmp['lat'] = i['latitude']
+        tmp['time'] = datetime.timestamp(i['timestamp'])
+        tmp['info'] = [{'key':'name','value':filterObj.vehicle_ids}]
+        # tmp['time'] = datetime.timestamp(i[j])
+        
+        q_ls.append(tmp)
+    # while(True):
+    #     if(filterObj.startDate < filterObj.endDate):
+    #         if(len(filterObj.route_id) > 0 and len(filterObj.vehicle_ids) > 0):
+    #             for i in range(0,len(filterObj.vehicle_ids)):
+    #                 filtered_routes = filtered_routes.union(Buses.objects.filter(route_id=filterObj.route_id[i],vehicle_id = filterObj.vehicle_ids[i],
+    #             timestamp__gte=filterObj.startDate,timestamp__lte=(filterObj.startDate + timedelta(seconds=10*filterObj.speed))).order_by('-timestamp'))
+    #         if(filtered_routes.count() > 0):
+    #             break
+    #         filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
+    #     else:
+    #         break
+    # if(str != filterObj.startDate):
+    #     filterObj.startDate = filterObj.startDate + timedelta(seconds=10*filterObj.speed)
     # print("filterrrrrrrrrr "+str(filtered_routes))
-    print ("LENGTH ",(filtered_routes))
-    buses_points = serialize('geojson',filtered_routes)
-    print (filterObj.startDate)
-    # filterObj.startDate = ""
-    # filterObj.endDate = ""
-    # filterObj.route_id = ""
-    return HttpResponse(buses_points,content_type='json')
+    # print ("LENGTH ",(filtered_routes))
+    # buses_points = serialize('json',list(filtered_routes))
+    # return json.dumps(q_ls)
+    return HttpResponse(json.dumps(q_ls),content_type='json')
 
 
 def appendTimeZone(playTime):

@@ -182,6 +182,16 @@ LEAFLET_CONFIG = {
         'js': ['leafletzoomhome/leaflet.zoomhome.min.js','leafletzoomhome/leaflet.zoomhome.js'],
         'auto-include': True,
     },
+    'TrackPlayback':{
+        'css': ['leaflettrackplayback/control.playback.css'],
+        'js': ['leaflettrackplayback/control.trackplayback.js','leaflettrackplayback/leaflet.trackplayback.js'],
+        'auto-include': True,
+    },
+    'Playback':{
+        # 'css': ['leaflettrackplayback/control.playback.css'],
+        'js': ['leafletplayback/LeafletPlayback.js','leafletplayback/LeafletPlayback.min.js'],
+        'auto-include': True,
+    },
     }, 
     # 'OVERLAYS':[('MapBox-Street', '/allstops', {'attribution': '&copy; MapBox'})
     # ],
