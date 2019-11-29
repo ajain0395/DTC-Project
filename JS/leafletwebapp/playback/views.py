@@ -89,7 +89,7 @@ def particular_buses_multiple(request):
         tmp['lng'] = i['longitude']
         tmp['lat'] = i['latitude']
         tmp['time'] = datetime.timestamp(i['timestamp'])
-        tmp['info'] = [{'key':'name','value':filterObj.vehicle_ids}]
+        tmp['info'] = [{'key':'Vehicle Id: ','value':filterObj.vehicle_ids}]
         # tmp['time'] = datetime.timestamp(i[j])
         
         q_ls.append(tmp)
