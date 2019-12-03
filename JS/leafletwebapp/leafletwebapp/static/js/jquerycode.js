@@ -13,9 +13,31 @@
 //     }
 //     return "";
 //  }
+
+function playbackresponse(resp){
+    //  console.log(resp);
+     var count = 0;
+    //  console.log(resp[0]['vehicle_id']);
+$('#vehicle_id_field').empty();
+    // .find('option')
+    // .remove()
+    // .end();
+    $("#vehicle_id_field").append('<option value=' + -1 + '>' + "None" + '</option>');
+    // $("#vehicle_id_field").val($("#vehicle_id_field option:first").val());
+    $("#vehicle_id_field option:first").attr('selected','selected');
+
+  for (var i=0; i < resp.length;++i){
+    //   console.log(resp[i]['vehicle_id'])
+      count++;
+    $("#vehicle_id_field").append('<option value=' + resp[i]['vehicle_id'] + '>' + resp[i]['vehicle_id'] + '</option>');
+    // addOption(document.getElementById("vehicle_id_field"), resp[i]['vehicle_id'], resp[i]['vehicle_id']);
+  }
+  console.log(count);
+
+   }
 $(document).ready(function() {
 
-    $("#starttime").change( function(event) {
+    $("#starttime").blur( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
         urll = "/updatestart/"
         $.ajax({
@@ -23,16 +45,12 @@ $(document).ready(function() {
             type: 'get',
             data:  {start_time:$(this).val()},
              success: function(resp){
-            //   for (var i=0; i < resp['routestops'].length;++i){
-    
-            //     addOption(document.getElementById("vehicle_id_field"), resp['vehicle_id'][i], resp['vehicle_id'][i]);
-            //   }
-    
+                 playbackresponse(resp);    
                }
     
         });
     });
-    $("#endtime").change( function(event) {
+    $("#endtime").blur( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
         urll = "/updatestart/"
         $.ajax({
@@ -40,17 +58,13 @@ $(document).ready(function() {
             type: 'get',
             data:  {start_time:$(this).val()},
              success: function(resp){
-            //   for (var i=0; i < resp['routestops'].length;++i){
-    
-            //     addOption(document.getElementById("vehicle_id_field"), resp['vehicle_id'][i], resp['vehicle_id'][i]);
-            //   }
-    
+                playbackresponse(resp);
                }
     
         });
     });
     $("#route_id_field").change( function(event) {
-        // alert("You changed the button using JQuery!" + $(this).val   ());
+        // alert("You changed the button using JQuery!" + $(this).val());
         urll = "/vehiclesonroute/";
         $.ajax({
             url:urll,
@@ -58,13 +72,10 @@ $(document).ready(function() {
             type: 'get',
             // headers: { "X-CSRFToken": $.cookie("csrftoken") },
             data:  {route_id:$(this).val()},
-             success: function(resp){
-              for (var i=0; i < resp['routestops'].length;++i){
-    
-                addOption(document.getElementById("vehicle_id_field"), resp['vehicle_id'][i], resp['vehicle_id'][i]);
-              }
-    
-               }
+             success: function(resp)
+             {
+                 playbackresponse(resp);
+             }
     
         });
     

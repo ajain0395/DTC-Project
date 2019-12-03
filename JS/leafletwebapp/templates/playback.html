@@ -77,37 +77,63 @@
                     zoomHome.addTo(map);
             var heading = document.getElementById("p1");
             var timeelapsed = 0;
-                var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
-                {
-			pointToLayer: function (feature, latlng) {
-                return L.marker(latlng, {
-                    icon:getnewicon(feature.properties.vehicle_id),
-                    title: feature.properties.vehicle_id,
-                    riseOnHover: true
-                });
-            },
-			onEachFeature: function(feature,layer){
-                layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
-                 "<br>"+"Speed: " + feature.properties.speed.toString() +
-                 "<br>"+"Route id: " + feature.properties.route_id.toString()
-                 );
-			}
-		});
-        datapoints.addTo(map);
 
-			L.control.liveupdate ({
-				update_map: function () {
+
+
+            $("#playbackcheck").click( function(event) {
+        // alert("You changed the button using JQuery!" + $(this).val());
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
+        xhr.onreadystatechange = xhrCallback;
+        xhr.send();
+        function xhrCallback() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            const trackplayback = L.trackplayback(data, map, {
+            targetOptions: {
+                useImg: true,
+                imgUrl: "{% static 'bus_icon/ship.png' %}"
+            }
+            });
+            const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
+            trackplaybackControl.addTo(map);
+        }
+        } 
+    });
+
+        //         var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
+        //         {
+		// 	pointToLayer: function (feature, latlng) {
+        //         return L.marker(latlng, {
+        //             icon:getnewicon(feature.properties.vehicle_id),
+        //             title: feature.properties.vehicle_id,
+        //             riseOnHover: true
+        //         });
+        //     },
+		// 	onEachFeature: function(feature,layer){
+        //         layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
+        //          "<br>"+"Speed: " + feature.properties.speed.toString() +
+        //          "<br>"+"Route id: " + feature.properties.route_id.toString()
+        //          );
+		// 	}
+        // });
         
-        timeelapsed = timeelapsed + 10;
-        datapoints.addUrl("{% url 'playback:filtered-routes' %}");
-        // datapoints.refresh("{% url 'playback:filtered-routes' %}");
-        // heading.innerHTML = timeelapsed + " Seconds";
+
+        // datapoints.addTo(map);
+
+		// 	L.control.liveupdate ({
+		// 		update_map: function () {
+        
+        // timeelapsed = timeelapsed + 10;
+        // datapoints.addUrl("{% url 'playback:filtered-routes' %}");
+        // // datapoints.refresh("{% url 'playback:filtered-routes' %}");
+        // // heading.innerHTML = timeelapsed + " Seconds";
 					
-				},
-				position: 'topleft',
-				interval: 2000
-			})
-			.addTo(map).stopUpdating();
+		// 		},
+		// 		position: 'topleft',
+		// 		interval: 2000
+		// 	})
+		// 	.addTo(map).stopUpdating();
             }        
     
     </script> 
@@ -116,7 +142,8 @@
     {% if messages %} {% for message in messages %} {% if message.tags %}
     <script>
         alert("{{ message }}")
-    </script> {% endif %} {% endfor %} {% endif %}
+    </script> 
+    {% endif %} {% endfor %} {% endif %}
 </head>
 <body>
 
@@ -144,7 +171,7 @@
                             {% csrf_token %}
                             {{ timeroute|crispy}}
                         </form>
-                        <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
+                        <input type="submit" id="playbackcheck" class="btn btn-success" value="Check">
                         <button type="submit" name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'playback:playback' %}'" >Reset</button>
 
                                           </div>
