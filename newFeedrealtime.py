@@ -26,33 +26,7 @@ sleepTime = 7	      #Time to wait for next iteration
 fileName = 'dummy.csv'             #Name of the filename to save as csv
 key='6uwbqTNiek5jYJKFAev0DZgH5LdeqXAR'          #Key fortransit website
 apiurl = 'https://otd.delhi.gov.in/api/realtime/VehiclePositions.pb?key='
-'''
-def insert_to_buses(X,connection):
-    try:
-        #connection.autocommit=False
-        sql = "INSERT INTO stops_buses (vehicle_id, trip_id, route_id, latitude, longitude, speed,timestamp, geometry)         VALUES (%s,%s,%s,%s,%s,%s,to_timestamp(%s,'yyyy-mm-dd hh24:mi:ss'), ST_SetSRID(ST_MakePoint(%s, %s), 4326))"
-        with connection.cursor() as cur:
-            cur.execute(sql, ((X['vehicle_id']),
-                              (X['trip_id']),
-                              (X['route_id']),
-                              (X['latitude']),
-                              (X['longitude']),
-                              (X['speed']),
-                              (str(datetime.datetime.fromtimestamp(int(X['timestamp'])))),
-                              (X['longitude']),
-                              (X['latitude']),                         
-                             ))
-        #connection.commit()
-        # print("Transaction completed successfully ")
-    except (Exception, psycopg2.DatabaseError) as error :
-        print ("Error in transction Reverting all other operations of a transction ", error)
-        connection.rollback()
-    #finally:
-        #closing database connection.
-        #if(connection):
-        #    connection.close()
-            # print("PostgreSQL connection is closed")
-'''
+
 class StringIteratorIO(io.TextIOBase):
 
     def __init__(self, iter: Iterator[str]):
@@ -131,6 +105,8 @@ def insert_to_buses( alldata: Iterator[Dict[str, Any]],connection, size: int = 8
             cursor.copy_from(buses_string_iterator, 'stops_buses', sep='|', size=size,columns=('vehicle_id','trip_id','route_id','latitude','longitude','geometry','speed','timestamp'))
     except(Exception):
         print (Exception)
+        return False
+    return True
 
 def entityCheck(feed):
     if(feed.entity):
@@ -163,30 +139,8 @@ def getFeed():
     except:
         return getFeed()
 
-'''
 def threadFunc(arr,connection):
-     wkb_w = WKBWriter()
-     counter=0
-     alldata = {}
-     for i in ['vehicle_id','trip_id','route_id','latitude','longitude','geometry','speed','timestamp']:
-         alldata[i] = []
-     for block in arr['entity']:
-        counter += 1
-        #row = OrderedDict()
-        alldata['vehicle_id'].append(block['id'])
-        alldata['trip_id'].append(block['vehicle']['trip'].get('tripId',''))
-        alldata['route_id'].append(block['vehicle']['trip'].get('routeId',''))
-        alldata['latitude'].append(block['vehicle']['position'].get('latitude',''))
-        alldata['longitude'].append(block['vehicle']['position'].get('longitude',''))
-        alldata['speed'].append(block['vehicle']['position'].get('speed',''))
-        alldata['timestamp'].append(str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp','')))))
-        alldata['geometry'].append(wkb_w.write_hex(Point( block['vehicle']['position'].get('latitude',''),block['vehicle']['position'].get('longitude',''))).decode('utf'))
-        #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
-        #row['label'] = block['vehicle']['vehicle'].get('label','')
-        #t1=time.time()
-     insert_to_buses(alldata,connection,len(alldata['vehicle_id']))    '''
-def threadFunc(arr,connection):
-     wkb_w = WKBWriter()
+    #  wkb_w = WKBWriter()
      counter=0
      alldata = []
      for block in arr['entity']:
@@ -204,48 +158,32 @@ def threadFunc(arr,connection):
         #row['label'] = block['vehicle']['vehicle'].get('label','')
         #t1=time.time()
         alldata.append(row)
-     insert_to_buses(iter(alldata),connection)
-     print ("Entries written ",len(alldata))    
+     writing_success = insert_to_buses(iter(alldata),connection)
+     print ("Entries written ",len(alldata),"Success: ", writing_success)
 
 
 
-def getDataFrame(dict_obj,connection):
-    #collector = []
-    counter=0
-    for block in dict_obj['entity']:
-        counter += 1
-        row = {}
-        #OrderedDict()
-        row['vehicle_id'] = block['id']
-        row['trip_id'] = block['vehicle']['trip'].get('tripId','')
-        row['route_id'] = block['vehicle']['trip'].get('routeId','')
-        row['latitude'] = block['vehicle']['position'].get('latitude','')
-        row['longitude'] = block['vehicle']['position'].get('longitude','')
-        row['speed'] = block['vehicle']['position'].get('speed','')
-        row['timestamp'] = block['vehicle'].get('timestamp','')
-        #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
-        #row['label'] = block['vehicle']['vehicle'].get('label','')
-        insert_to_buses(row,connection)
-        #collector.append(row)
-    #df = pd.DataFrame(collector)
-    #return df
-'''
-def getDataFrame(dict_obj,connection):
-    div = len(dict_obj['entity'])//4
-    print("Number of Entries ",len(dict_obj['entity']))
-    i=1
-    arr1 = [dict_obj['entity'][i] for i in range(0,i*div)];  i+=1
-    arr2 = [dict_obj['entity'][i] for i in range((i-1)*div,i*div)]; i+=1
-    arr3 = [dict_obj['entity'][i] for i in range((i-1)*div,i*div)]; i+=1
-    arr4 = [dict_obj['entity'][i] for i in range((i-1)*div,len(dict_obj['entity']))]; 
-    
-    t1 = Thread(target=threadFunc, args=(arr1,connection,)) 
-    t2 = Thread(target=threadFunc, args=(arr2,connection,)) 
-    t3 = Thread(target=threadFunc, args=(arr3,connection,)) 
-    t4 = Thread(target=threadFunc, args=(arr4,connection,))
-    t1.start();t2.start();t3.start();t4.start();
-    t1.join();t2.join();t3.join();t4.join(); 
-'''
+# def getDataFrame(dict_obj,connection):
+#     #collector = []
+#     counter=0
+#     for block in dict_obj['entity']:
+#         counter += 1
+#         row = {}
+#         #OrderedDict()
+#         row['vehicle_id'] = block['id']
+#         row['trip_id'] = block['vehicle']['trip'].get('tripId','')
+#         row['route_id'] = block['vehicle']['trip'].get('routeId','')
+#         row['latitude'] = block['vehicle']['position'].get('latitude','')
+#         row['longitude'] = block['vehicle']['position'].get('longitude','')
+#         row['speed'] = block['vehicle']['position'].get('speed','')
+#         row['timestamp'] = block['vehicle'].get('timestamp','')
+#         #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
+#         #row['label'] = block['vehicle']['vehicle'].get('label','')
+#         insert_to_buses(row,connection)
+#         #collector.append(row)
+#     #df = pd.DataFrame(collector)
+#     #return df
+
 def getFrame(connection):
     temp1 = time.time()
     entityFlag=False
