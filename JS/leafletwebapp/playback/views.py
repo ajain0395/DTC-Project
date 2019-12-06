@@ -234,7 +234,8 @@ class playBackView(TemplateView):
         print ("---------------\n",cookie_data,"\n-----------------","\n")
         if(cookie_data['vehicle_id'] == -1):
             return HttpResponse()
-        filtered_routes = Buses.objects.filter(route_id=cookie_data['route_id'],vehicle_id=cookie_data['vehicle_id'],
+        #route_id=cookie_data['route_id'],
+        filtered_routes = Buses.objects.filter(vehicle_id=cookie_data['vehicle_id'],
         timestamp__gte=cookie_data['startDate'],timestamp__lte=cookie_data['endDate']).order_by('timestamp').values('latitude','longitude','timestamp')
         q_ls = []
         for i in filtered_routes:
