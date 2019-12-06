@@ -20,6 +20,7 @@ import datetime
 import time
 from django.contrib.gis.geos import Point, WKBWriter,WKBReader
 import io
+import random
 
 
 sleepTime = 7	      #Time to wait for next iteration
@@ -140,7 +141,8 @@ def getFeed():
     except:
         return getFeed()
 def getcongestion(block):
-    return 1
+    a =  random.randint(0, 2)
+    return a
 
 def threadFunc(arr,connection):
     #  wkb_w = WKBWriter()
