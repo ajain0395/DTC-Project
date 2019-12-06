@@ -98,13 +98,14 @@ def insert_to_buses( alldata: Iterator[Dict[str, Any]],connection, size: int = 8
                     row['longitude'],
                     row['geometry'],
                     row['speed'],
+                    row['congestion'],
                     row['timestamp']
                 ))) + '\n'
                 for row in alldata
             ))
-            cursor.copy_from(buses_string_iterator, 'stops_buses', sep='|', size=size,columns=('vehicle_id','trip_id','route_id','latitude','longitude','geometry','speed','timestamp'))
+            cursor.copy_from(buses_string_iterator, 'stops_buses', sep='|', size=size,columns=('vehicle_id','trip_id','route_id','latitude','longitude','geometry','speed','congestion','timestamp'))
     except(Exception):
-        print (Exception)
+        print (str(Exception))
         return False
     return True
 
@@ -138,6 +139,8 @@ def getFeed():
         return feed
     except:
         return getFeed()
+def getcongestion(block):
+    return 1
 
 def threadFunc(arr,connection):
     #  wkb_w = WKBWriter()
@@ -153,7 +156,9 @@ def threadFunc(arr,connection):
         row['longitude'] = block['vehicle']['position'].get('longitude','')
         row['speed'] = block['vehicle']['position'].get('speed','')
         row['timestamp'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
+ #       row['trip_start_time'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
         row['geometry'] = Point( block['vehicle']['position'].get('longitude',''),block['vehicle']['position'].get('latitude',''),srid=4326)
+        row['congestion'] = getcongestion(block)
         #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
         #row['label'] = block['vehicle']['vehicle'].get('label','')
         #t1=time.time()

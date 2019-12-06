@@ -33,15 +33,16 @@ class Buses(models.Model):
     vehicle_id = models.CharField(db_index=True,max_length=100, blank=False)
     timestamp = models.DateTimeField(db_index=True,blank=True)
     congestion = models.IntegerField(db_index=True,blank=True,default=1)
-    trip_start_time = models.DateTimeField(db_index=True,blank=True,default= datetime.now())
+    # trip_start_time = models.DateTimeField(db_index=True,blank=True,default= datetime.now())
     class Meta:
         # order of drop-down list items
-        ordering = ('vehicle_id','trip_id','route_id','latitude','longitude','speed','trip_start_time','timestamp','geometry','congestion')
+        ordering = ('vehicle_id','trip_id','route_id','latitude','longitude','speed','timestamp','geometry','congestion')
         index_together = [
             ("vehicle_id", "route_id"),
             ('route_id','timestamp'),
             ('route_id','timestamp','vehicle_id'),
             ('timestamp','vehicle_id'),
+            ('timestamp','geometry'),   
         ]
         # plural form in admin view
         verbose_name_plural = 'buses'
