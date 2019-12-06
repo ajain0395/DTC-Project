@@ -1,33 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+        {% load static %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  
+  <link rel="stylesheet" href="{% static 'dist/leaflet-messagebox.css' %}" />
+    <script src="{% static 'dist/leaflet-messagebox.js' %}"></script>
+  <title>DTC Project</title>
+  {% block head %}
+  {% endblock %}
+
+</head>
+<body>
         
-    <head>
-            <meta charset="UTF-8">   
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-            <title>DTC Bus Monitor Portal</title>
-
-            
-            
-
-
-            
-            {% block extra_head_content  %}{% endblock %}
-            
-
-           
-            
-
-
-
-            
-
-       
-    </head>
-    <body>
-    
-               
-    {% block body %}
+ 
+    {% block content %}
     {% endblock %}
-    
-    </body>
+  
+</body>
 </html>
