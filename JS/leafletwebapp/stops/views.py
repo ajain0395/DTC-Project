@@ -40,7 +40,7 @@ class FilterBuses:
 
 # request.session[buskey]. = FilterBuses()
 buskey = 'busfilter'
-
+page_id = "Stops"
 
 def requestlivetime(request):
     return request['livetime']
@@ -125,7 +125,7 @@ class HomePageView(TemplateView):
     template_name = "stops-detail.html"
 
     def get(self, request, **kwargs):
-        print("inside get")
+        print("inside get stops")
         request.session[buskey] = FilterBuses().__dict__
         print (request.session[buskey])
         form = RVForm()
@@ -133,7 +133,7 @@ class HomePageView(TemplateView):
         return render(request, self.template_name, {"form": form})
 
     def post(self, request, **kwargs):
-        print("inside post")
+        print("inside post stops")
         form = RVForm(request.POST)
         if form.is_valid():
             # vehicle_ids = form.cleaned_data['vehicle_id']
