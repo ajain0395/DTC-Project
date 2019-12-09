@@ -198,7 +198,7 @@ class playBackView(TemplateView):
 
     def vehiclesonroute(request):
         temp_data = appendTimeZone(request.GET.get('route_id'))
-        request.session[session_key]['endDate'] = temp_data
+        request.session[session_key]['route_id'] = temp_data
 
         print ("route_id_updated ",temp_data)    
         # json_subcat = serialize("json", queryres)

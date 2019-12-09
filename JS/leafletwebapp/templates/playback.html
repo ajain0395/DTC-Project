@@ -82,6 +82,12 @@
 
             $("#playbackcheck").click( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
+        if($("#vehicle_id_field").val() == -1)
+        {
+            alert('Reselect Vehicle Id');
+        }
+        else
+        {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
         xhr.onreadystatechange = xhrCallback;
@@ -106,7 +112,8 @@
             const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
             trackplaybackControl.addTo(map);
         }
-        } 
+        }
+    } 
     });
 
         //         var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
