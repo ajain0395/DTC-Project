@@ -131,32 +131,97 @@
                 }
             });
         }
-
-
+        function colorcongestion(congestionlevel)
+        {
+            if(congestionlevel == 0)
+            {
+                return 'green';
+            }
+            else if(congestionlevel == 1)
+            {
+                return 'orange';
+            }
+            return 'red';
+        }
         function map_init(map, options) {
             map.removeControl(map.zoomControl);
             var zoomHome = L.Control.zoomHome({
                 position: 'topleft'
             });
             zoomHome.addTo(map);
-
+            var markers = L.markerClusterGroup({chunkedLoading: true});
+            map.addLayer(markers);
             var datapoints = returnfilterbuses();
             datapoints.addTo(map);
+
             var controlLayers = map.layerscontrol;
 
             controlLayers.addOverlay(stops_points, "Bus Stops");
 
             L.control.liveupdate({
                     update_map: function() {
-                        // datapoints.addTo(map);
-                        // newdatapoints = returnfilterbuses();
-                        // map.removeLayer(datapoints);
-                        // datapoints = newdatapoints;
-                        datapoints.refresh("{% url 'stops:filtered-buses' %}");
+                        
+                        if($("#vehicle_id_field_live").val() != -1)
+                        {
+                            datapoints.refresh("{% url 'stops:filtered-buses' %}");
+                            console.log($("#vehicle_id_field_live").val());
 
-                    },
+                            
+                            urll = "{% url 'stops:line-buses' %}";
+                            $.ajax({
+                                    url:urll,
+                                    type: 'get',
+                                    success: function(resp)
+                                    {
+                                            console.log(resp);
+                                            console.log(resp[0]);
+                                            new L.Polyline([
+                                            [resp[0]['latitude'],resp[0]['longitude']],
+                                            [resp[1]['latitude'],resp[1]['longitude']]
+                                            ], {
+                                            color: colorcongestion(resp[0]['congestion']),
+                                            weight: 5,
+                                            opacity: 0.5
+                                            }).addTo(map);
+
+                                    }
+                                });
+//////////////////////////////////////////////////////////////////
+
+
+                        }
+                        else
+                        { 
+                            urll = "{% url 'stops:all-buses' %}";
+       $.ajax({
+            url:urll,
+            type: 'get',
+             success: function(resp)
+             {
+                 var geoJsonLayer = L.geoJson(resp, {
+                    pointToLayer: function(feature, latlng) {
+                    return L.marker(latlng, {
+                        icon: getnewicon(feature.properties.vehicle_id),
+                        title: feature.properties.vehicle_id,
+                        riseOnHover: true
+                    });
+                },
+			onEachFeature: function (feature, layer) {
+                
+				layer.bindPopup("Bus Number: " + feature.properties.vehicle_id.toString() +
+                        "<br>" + "Speed: " + feature.properties.speed.toString() +
+                        "<br>" + "Route id: " + feature.properties.route_id.toString());
+			}
+		});
+        markers.clearLayers();
+        markers.addLayers(geoJsonLayer);
+             }
+        });
+    }/////end of all_buses
+
+    },
                     position: 'topleft',
-                    interval: 10000
+                    interval: 9000
                 })
                 .addTo(map)
                 .stopUpdating();
@@ -164,13 +229,6 @@
     </script>
     <title>DTC Project</title>
 
-    <!-- {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %} -->
     {% if messages %} {% for message in messages %} {% if message.tags %}
     <script>
         alert("{{ message }}")
@@ -219,7 +277,7 @@
                         <ul class="nav navbar-nav ml-auto">
                             
                             <li class="nav-item active">
-                                <a class="nav-link" href='/'>Home</a>
+                                <a class="nav-link" href='/'>LiveTracking</a>
                             </li>
                             <li class="nav-item ">
                                 <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>

@@ -192,6 +192,12 @@ LEAFLET_CONFIG = {
         'js': ['leafletplayback/LeafletPlayback.js','leafletplayback/LeafletPlayback.min.js'],
         'auto-include': True,
     },
+    'MarkerCluster':{
+        'css': ['markercluster/MarkerCluster.css','markercluster/MarkerCluster.Default.css'],
+        'js': ['markercluster/leaflet.markercluster.js'],
+        'auto-include': True,
+    },
+    
     }, 
     # 'OVERLAYS':[('MapBox-Street', '/allstops', {'attribution': '&copy; MapBox'})
     # ],

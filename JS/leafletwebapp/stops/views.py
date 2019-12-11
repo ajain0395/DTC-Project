@@ -12,24 +12,26 @@ from django.http import HttpRequest, HttpResponse
 from django.utils import timezone
 from datetime import timedelta
 from django.contrib import messages
-
+import json
 
 # class static_members():
 #     pass
 class FilterBuses:
     time = 15
-    livetime = 5
+    livetime = 2
     top_entries = 1
-    vehicle_id = []
+    vehicle_id = -1
     filter_field = ""
     route_id = []
+    # last_point = {}
     def __init__(self):
         self.time = 15
-        self.livetime = 5
+        self.livetime = 2
         self.top_entries = 1
-        self.vehicle_id = []
+        self.vehicle_id = -1
         self.filter_field = ""
         self.route_id = []
+        # self.last_point = {}
     def print_filters(self):
         print ("Routes Selected " + str(self.route_id))
         print ("Live Time" + str(self.livetime))
@@ -87,9 +89,9 @@ class BusesDetailView(DetailView):
 #     request.session[buskey]['route_id'] = []
 #     return particular_buses_multiple(request)
 
-def getvehicles_id(request):
-    vehicles_id_list = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time'])))\
-        .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
+# def getvehicles_id(request):
+#     3 = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=request.session[buskey]['time'])))\
+#         .order_by('vehicle_id','timestamp').distinct('vehicle_id').values('vehicle_id')
         
 
 
@@ -110,10 +112,6 @@ def particular_bus_id(request,vehicle_id):
 def AllStops(request):
     stops_points = serialize('geojson',Stops.objects.all())
     return HttpResponse(stops_points,content_type='json')
-
-def AllBuses(request):
-    buses_points = serialize('geojson',Buses.objects.all())
-    return HttpResponse(buses_points,content_type='json')
 
 
 from stops.forms import RVForm
@@ -136,60 +134,55 @@ class HomePageView(TemplateView):
         print("inside post stops")
         form = RVForm(request.POST)
         if form.is_valid():
-            # vehicle_ids = form.cleaned_data['vehicle_id']
-            # clean_vehicle_id =  form.cleaned_data['vehicle_id_f']
-            # clean_route_id = form.cleaned_data['route_id_f']
-
-            # if(len(clean_route_id) == 1 and )
-
-            # request.session[buskey]['filter_field']="vehicle_id"
-            # clean_vehicle_id = asd
-            # print (clean_vehicle_id)
-            # print (asd)
-            # for i in asd.values():
-            #     print (i['vehicle_id'])
-            # for i in asd:
-            #     print (i.vehicle_id)
             vehicle = form.getcleanedvehicle()
-            route = form.getcleanedroutes()
-            if(len(vehicle)==0 and len(route) == 0):
-                messages.info(request, 'Select Vehicle or Route First')
-            else:
-                request.session[buskey]['vehicle_id'],request.session[buskey]['route_id'] = vehicle,route
-            
-            # print ("hello " + str(request.POST))
-            # if "filterbus" in request.POST:
-            #     print ("filterbus inside")
-            #     # request.session.pop('filterbus')
-            #     pass
-            # else:
-            #     form = RVForm()
-            #     print ("filterbus inside")
-            # form.
+            print (vehicle)
+
+            request.session[buskey]['vehicle_id'] = vehicle
         else:
             form = RVForm()
             
         return render(request, self.template_name, {"form": form})
+    def all_buses_data(request):        
+        queryres = Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=FilterBuses.livetime))).order_by('vehicle_id','-timestamp').distinct('vehicle_id')
+        # q_ls = list(queryres)
+        # return json.dumps(q_ls)
+        buses_points = serialize('geojson',queryres)
+        return HttpResponse(buses_points,content_type='json')
+
+    def bus_route_line_data(request):
+        cookiedata = request.session[buskey]
+        sessionvehicle_ids = requestvehicleids(cookiedata)
+        # sessionroute_ids = requestroutes(cookiedata)
+        sessionlivetime = requestlivetime(cookiedata)
+        sessiontopentries = requesttopentries(cookiedata)
+        filtered_buses = Buses.objects.filter(vehicle_id=sessionvehicle_ids,
+        timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('-timestamp').values('latitude','longitude','congestion')[:2]
+        # print (filtered_buses[0])
+        # print (filtered_buses[1])
+        q_ls = list(filtered_buses)
+        return HttpResponse(json.dumps(q_ls),content_type='json')
+
     def particular_buses_multiple(request):
         # print_filters()
         cookiedata = request.session[buskey]
         print (cookiedata)
 
         sessionvehicle_ids = requestvehicleids(cookiedata)
-        sessionroute_ids = requestroutes(cookiedata)
+        # sessionroute_ids = requestroutes(cookiedata)
         sessionlivetime = requestlivetime(cookiedata)
         sessiontopentries = requesttopentries(cookiedata)
 
-        filtered_buses = Buses.objects.none()
-        if(len(sessionvehicle_ids) > 0):
-            for i in range(0,len(sessionvehicle_ids)):
-                filtered_buses = filtered_buses.union(Buses.objects.filter(vehicle_id=sessionvehicle_ids[i],
-            timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('-timestamp')[:sessiontopentries])
+        # filtered_buses = Buses.objects.none()
+        # if(sessionvehicle_ids != -1):
+        filtered_buses = Buses.objects.filter(vehicle_id=sessionvehicle_ids,
+        timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('-timestamp')[:1]
 
-        if(len(sessionroute_ids) > 0 ):
-            for i in range(0,len(sessionroute_ids)):
-                filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=sessionroute_ids[i],
-            timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+        # elif(len(sessionroute_ids) > 0 ):
+        #     for i in range(0,len(sessionroute_ids)):
+        #         filtered_buses = filtered_buses.union(Buses.objects.filter(route_id=sessionroute_ids[i],
+        #     timestamp__gte=(timezone.now()-timedelta(minutes=sessionlivetime))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
+        # else:
+        #     filtered_buses = filtered_buses.union(Buses.objects.filter(timestamp__gte=(timezone.now()-timedelta(minutes=FilterBuses.livetime))).order_by('vehicle_id','-timestamp').distinct('vehicle_id'))
 
         buses_points = serialize('geojson',filtered_buses)
         return HttpResponse(buses_points,content_type='json')
