@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from django.views.generic import TemplateView
 # urlpatterns = [
 #     path('admin/', admin.site.urls),
 # ]
@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^', include('stops.urls')),
     url(r'^', include('playback.urls')),
     url(r'^', include('download.urls')),
+    url(r'^aboutus/', TemplateView.as_view(template_name='aboutus.html'), name="aboutus"),
+    url(r'^', TemplateView.as_view(template_name='home.html'), name="home"),
     url(r'^select2/', include('django_select2.urls')),
     url('admin/', admin.site.urls),
 ]

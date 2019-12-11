@@ -9,7 +9,7 @@ import os
 
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-print ("cur path ",dir_path)
+#print ("cur path ",dir_path)
 routes_all = pd.read_csv('static/buses_static_data/routes.txt')
 routes_all_d = {}
 for i in range(len(routes_all)):

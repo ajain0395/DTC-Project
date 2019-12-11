@@ -199,15 +199,21 @@
                                         <div class="navbar-collapse collapse" id="navbarSupportedContent">
                                             <ul class="nav navbar-nav ml-auto">
                                                 
-                                                <li class="nav-item ">
-                                                    <a class="nav-link" href='/'>Home</a>
-                                                </li>
+                                                    <li class="nav-item">
+                                                            <a class="nav-link" href='{% url 'home' %}'>Home</a>
+                                                         </li>
+                                                        <li class="nav-item ">
+                                                            <a class="nav-link" href='{% url 'stops:homepage' %}'>Live Tracking</a>
+                                                        </li>
                                                 <li class="nav-item active">
                                                     <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
                                                 </li>
+                                                <li class="nav-item ">
+                                                        <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
+                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
