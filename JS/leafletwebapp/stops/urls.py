@@ -3,11 +3,8 @@ from django.views.generic import TemplateView
 from .views import (AllStops,
 StopsDetailView,
 StopsTemplateView,
-AllBuses,
 BusesDetailView,
 particular_bus_id,
-# add_bus_to_list,
-# particular_buses_multiple,
 HomePageView)
 
 
@@ -24,29 +21,20 @@ urlpatterns = [
         url(r'^allstops/$',
         AllStops,name="all-stops"),
 
-        url(r'^allbuses/$',
-        AllBuses,name="all-buses"),
+        url(r'^all_buses/$',
+        HomePageView.all_buses_data,name="all-buses"),
+        
+        url(r'^line_buses/$',    
+        HomePageView.bus_route_line_data,name="line-buses"),
 
-        # url(r'^$',
-        # StopsTemplateView.as_view(), name='stops-template'),
 
         url(r'^livetracking/$',HomePageView.as_view(),name="homepage"),
-        # url(r'^$',TemplateView.as_view(template_name = 'stops-detail.html')),
 
         url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
         particular_bus_id,name="particular-bus"),
 
-        # url(r'^showbus/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
-        # add_bus_to_list,name="add-bus-to-list"),
+
         
         url(r'^filtered_buses/$',
         HomePageView.particular_buses_multiple,name="filtered-buses"),
-
-        # url(r'^gotoPlayback/$', TemplateView.as_view(template_name='playback.html'), name="gotoPlayback"),
-        
-# url(r'^(?P<pk>[0-9]+)$', views.LocationsView, name='location-bus'),
 ]
-
-# urlpatterns = [
-
-# ]
