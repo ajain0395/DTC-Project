@@ -68,10 +68,10 @@ class Timerouteform(forms.Form):
     # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=routes,widget=Select2Multiple,initial=routes[0])
     # #print("heloooooooooooooooooooooooooo"+str(route_id_f))
 
-    startDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'starttime'}),required=True,initial=timezone.now())
-    endDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'endtime'}),required=True,initial=timezone.now())
-    route_id_f = forms.ChoiceField(label = "Route Ids",choices=getroutes(),widget=Select2Widget(attrs={'id':'route_id_field'}),required=True)
-    vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",widget=Select2Widget(attrs={'id':'vehicle_id_field'}),required=True)
+    startDateTime= DateTimeField(label="Start Time",widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'starttime'}),required=True,initial=timezone.now())
+    endDateTime= DateTimeField(label="End Time",widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD HH:MM:SS','id':'endtime'}),required=True,initial=timezone.now())
+    route_id_f = forms.ChoiceField(label = "Route Id",choices=getroutes(),widget=Select2Widget(attrs={'id':'route_id_field'}),required=True)
+    vehicle_id_f = forms.ChoiceField(label = "Vehicle Id",widget=Select2Widget(attrs={'id':'vehicle_id_field'}),required=True)
     # def __init__(self,timeroute, *args,**kwargs):
     #     print ("Inside new constructor")
     #     super(Timerouteform, timeroute).__init__(*args, **kwargs)

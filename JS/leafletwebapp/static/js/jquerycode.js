@@ -14,7 +14,7 @@
 //     return "";
 //  }
 
-function playbackresponse(resp){
+function playbackresponse(resp,route){
     //  console.log(resp);
      var count = 0;
     //  console.log(resp[0]['vehicle_id']);
@@ -22,10 +22,15 @@ $('#vehicle_id_field').empty();
     // .find('option')
     // .remove()
     // .end();
-    $("#vehicle_id_field").append('<option value=' + -1 + '>' + "None" + '</option>');
+    $("#vehicle_id_field").append('<option value=' + -1 + '>' + "---------------" + '</option>');
+    // $("#vehicle_id_field").val(-1);
+    // $("#vehicle_id_field").text("---------------");
     // $("#vehicle_id_field").val($("#vehicle_id_field option:first").val());
-    $("#vehicle_id_field option:first").attr('selected','selected');
-
+    if(resp.length == 0 && route == true)
+    {
+        // $("#vehicle_id_field option:first").attr('selected','selected');
+        alert("No Vecicles Found on route " +$("#route_id_field").val() +" between time " + $("#starttime").val() +" - " +$("#endtime").val());
+    }
   for (var i=0; i < resp.length;++i){
     //   console.log(resp[i]['vehicle_id'])
       count++;
@@ -41,30 +46,44 @@ $(document).ready(function() {
 
     $("#starttime").blur( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
-        urll = "/updatestart/";
+        if($("#endtime").val() < $("#starttime").val())
+        {
+            alert("Start time cannot be after End time");
+        }
+        else
+        {
+            urll = "/updatestart/";
         //urll = "{% url 'playback:update-end' %}"
         $.ajax({
             url:urll,
             type: 'get',
             data:  {start_time:$(this).val()},
              success: function(resp){
-                 playbackresponse(resp);    
+                 playbackresponse(resp,false);    
                }
     
         });
+    }
     });
     $("#endtime").blur( function(event) {
         // alert("You changed the button using JQuery!" + $(this).val());
-        urll = "/updateend/";
+        if($("#endtime").val() < $("#starttime").val())
+        {
+            alert("End time cannot be less than Start time");
+        }
+        else
+        {
+            urll = "/updateend/";
         $.ajax({
             url:urll,
             type: 'get',
             data:  {end_time:$(this).val()},
              success: function(resp){
-                playbackresponse(resp);
+                playbackresponse(resp,false);
                }
     
         });
+    }
     });
     
     $("#vehicle_id_field").change( function(event) {
@@ -90,7 +109,7 @@ $(document).ready(function() {
             data:  {route_id:$(this).val()},
              success: function(resp)
              {
-                 playbackresponse(resp);
+                 playbackresponse(resp,true);
              }
     
         });
