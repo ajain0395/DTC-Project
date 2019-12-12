@@ -27,11 +27,11 @@ Delhi/data/india_road_network/*
 Delhi/data/DTC_dataset/*
 Denver/data/crime.csv
 Delhi/data/GTFS.zip
-JS/leafletwebapp/buses/migrations/*
-JS/leafletwebapp/stops/migrations/*
-JS/leafletwebapp/.vscode/*
+dtc_dashboard/buses/migrations/*
+dtc_dashboard/stops/migrations/*
+dtc_dashboard/.vscode/*
 newcollecteddata/
-JS/leafletwebapp/static/bootstrap-4.3.1-dist.zip
+dtc_dashboard/static/bootstrap-4.3.1-dist.zip
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
