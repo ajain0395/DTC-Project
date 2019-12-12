@@ -21,9 +21,6 @@
 
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/playbackStyle.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/leaflet-liveupdate.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/leaflet-messagebox.css' %}" />
     <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
 
     
@@ -33,13 +30,6 @@
     <script defer src="{% static 'js/jquerycode.js' %}"></script>
 
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
-    <script src="{% static 'js/leaflet-liveupdate.js' %}"></script>
-    <script src="{% static 'js/leaflet-messagebox.js' %}"></script>
-
-
-
-        <script type="text/javascript" src="{% static 'js/leaflet.ajax.js' %}" >	</script>
-
     <script type="text/javascript">
     iconsmap = {}
 
@@ -116,39 +106,7 @@
     } 
     });
 
-        //         var datapoints = new L.GeoJSON.AJAX("{% url 'playback:filtered-routes' %}",
-        //         {
-		// 	pointToLayer: function (feature, latlng) {
-        //         return L.marker(latlng, {
-        //             icon:getnewicon(feature.properties.vehicle_id),
-        //             title: feature.properties.vehicle_id,
-        //             riseOnHover: true
-        //         });
-        //     },
-		// 	onEachFeature: function(feature,layer){
-        //         layer.bindPopup("Bus Number: "+feature.properties.vehicle_id.toString() +
-        //          "<br>"+"Speed: " + feature.properties.speed.toString() +
-        //          "<br>"+"Route id: " + feature.properties.route_id.toString()
-        //          );
-		// 	}
-        // });
-        
-
-        // datapoints.addTo(map);
-
-		// 	L.control.liveupdate ({
-		// 		update_map: function () {
-        
-        // timeelapsed = timeelapsed + 10;
-        // datapoints.addUrl("{% url 'playback:filtered-routes' %}");
-        // // datapoints.refresh("{% url 'playback:filtered-routes' %}");
-        // // heading.innerHTML = timeelapsed + " Seconds";
-					
-		// 		},
-		// 		position: 'topleft',
-		// 		interval: 2000
-		// 	})
-		// 	.addTo(map).stopUpdating();
+      
             }        
     
     </script> 
@@ -170,18 +128,10 @@
                         </div>
                 
                         
-                        <!--  -->
+
                         <div class="buttonHolder">
 
-                                <!-- <div class="well">
-                                        <div id="datetimepicker1" class="input-append date">
-                                          <input data-format="dd/MM/yyyy hh:mm:ss" type="text"></input>
-                                          <span class="add-on">
-                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                                            </i>
-                                          </span>
-                                        </div>
-                                      </div> -->
+                            
                         <form action="/playback/" method="post" >
                             {% csrf_token %}
                             {{ timeroute|crispy}}
@@ -191,7 +141,6 @@
 
                                           </div>
 
-                        <!-- <input type="submit" name="reset" class="btn btn-success" value="reset"> -->
 
                     </nav>
                 
@@ -218,7 +167,7 @@
                                                             <a class="nav-link" href='{% url 'home' %}'>Home</a>
                                                          </li>
                                                         <li class="nav-item ">
-                                                            <a class="nav-link" href='{% url 'stops:homepage' %}'>Live Tracking</a>
+                                                            <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
                                                         </li>
                                                 <li class="nav-item active">
                                                     <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>

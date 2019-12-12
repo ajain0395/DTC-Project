@@ -23,12 +23,12 @@ urlpatterns = [
 
         url(r'^all_buses/$',
         HomePageView.all_buses_data,name="all-buses"),
-        
+
         url(r'^line_buses/$',    
         HomePageView.bus_route_line_data,name="line-buses"),
 
 
-        url(r'^livetracking/$',HomePageView.as_view(),name="homepage"),
+        url(r'^livetracking/$',HomePageView.as_view(),name="livetracking"),
 
         url(r'^allbuses/(?P<vehicle_id>[0-9|a-z|A-Z]+)$',
         particular_bus_id,name="particular-bus"),

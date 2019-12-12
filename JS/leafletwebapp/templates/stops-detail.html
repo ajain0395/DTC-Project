@@ -11,36 +11,17 @@
     {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
     {% bootstrap_css %}         {# Embed Bootstrap CSS #}
     {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
-<!-- 
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-
-    <script src="{% static 'js/jquery.js' %}"></script> -->
     {% leaflet_css %} 
     {{ form.media.css }} 
     {{form.media.js}}
     {{form.media}} 
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/leaflet-liveupdate.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/leaflet-messagebox.css' %}" />
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
-
-    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"> -->
-
-
-
     <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
-
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap JS -->
-    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script> -->
-
-
-    <!-- Font Awesome JS -->
     <script defer src="{% static 'js/solid.js' %}"></script>
     <script defer src="{% static 'js/jquerycode.js' %}"></script>
 
@@ -48,11 +29,6 @@
 
 
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
-    <script src="{% static 'js/leaflet-liveupdate.js' %}"></script>
-    <script src="{% static 'js/leaflet-messagebox.js' %}"></script>
-
-
-    <script type="text/javascript" src="{% static 'js/leaflet.ajax.js' %}">
     </script>
 
 
@@ -224,7 +200,38 @@
                     interval: 9000
                 })
                 .addTo(map)
-                .stopUpdating();
+                .startUpdating();
+                var current_position, current_accuracy;
+
+    function onLocationFound(e) {
+      // if position defined, then remove the existing position marker and accuracy circle from the map
+      if (current_position) {
+          map.removeLayer(current_position);
+          map.removeLayer(current_accuracy);
+      }
+
+      var radius = e.accuracy / 2;
+
+      current_position = L.marker(e.latlng).addTo(map)
+        .bindPopup("You are within " + radius + " meters from this point").openPopup();
+
+      current_accuracy = L.circle(e.latlng, radius).addTo(map);
+    }
+
+    function onLocationError(e) {
+      alert(e.message);
+    }
+
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    // wrap map.locate in a function    
+    function locate() {
+      map.locate({setView: true, maxZoom: 16});
+    }
+
+    // call locate every 3 seconds... forever
+    // setInterval(locate, 3000);
         }
     </script>
     <title>DTC Project</title>
@@ -247,13 +254,15 @@
 
 
             <!--  -->
+            <div class="buttonHolder">
 
             <form action="/livetracking/" method="post">
                 {% csrf_token %} 
                 {{ form|crispy}}
                 <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
-
+                <button name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'stops:livetracking' %}'" >Reset</button>
             </form>
+            </div>
             <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->
         </nav>
 
@@ -280,7 +289,7 @@
                                         <a class="nav-link" href='{% url 'home' %}'>Home</a>
                                      </li>
                                     <li class="nav-item active">
-                                        <a class="nav-link" href='{% url 'stops:homepage' %}'>Live Tracking</a>
+                                        <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
                                     </li>
                             <li class="nav-item ">
                                 <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>

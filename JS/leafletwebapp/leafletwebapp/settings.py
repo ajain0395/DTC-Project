@@ -178,23 +178,37 @@ LEAFLET_CONFIG = {
      ],
     'PLUGINS': {
     'ZoomHome': {
-        'css': ['leafletzoomhome/leaflet.zoomhome.css'],
-        'js': ['leafletzoomhome/leaflet.zoomhome.min.js','leafletzoomhome/leaflet.zoomhome.js'],
+        'css': ['leafletapi/leafletzoomhome/leaflet.zoomhome.css'],
+        'js': ['leafletapi/leafletzoomhome/leaflet.zoomhome.min.js','leafletapi/leafletzoomhome/leaflet.zoomhome.js'],
         'auto-include': True,
     },
+    'Leafletajax':{
+        'js': ['leafletapi/leaflet.ajax.js'],
+        'auto-include':True,
+    },
     'TrackPlayback':{
-        'css': ['leaflettrackplayback/control.playback.css'],
-        'js': ['leaflettrackplayback/control.trackplayback.js','leaflettrackplayback/leaflet.trackplayback.js'],
+        'css': ['leafletapi/leaflettrackplayback/control.playback.css'],
+        'js': ['leafletapi/leaflettrackplayback/control.trackplayback.js','leafletapi/leaflettrackplayback/leaflet.trackplayback.js'],
         'auto-include': True,
     },
     'Playback':{
         # 'css': ['leaflettrackplayback/control.playback.css'],
-        'js': ['leafletplayback/LeafletPlayback.js','leafletplayback/LeafletPlayback.min.js'],
+        'js': ['leafletapi/leafletplayback/LeafletPlayback.js','leafletapi/leafletplayback/LeafletPlayback.min.js'],
         'auto-include': True,
     },
     'MarkerCluster':{
-        'css': ['markercluster/MarkerCluster.css','markercluster/MarkerCluster.Default.css'],
-        'js': ['markercluster/leaflet.markercluster.js'],
+        'css': ['leafletapi/markercluster/MarkerCluster.css','leafletapi/markercluster/MarkerCluster.Default.css'],
+        'js': ['leafletapi/markercluster/leaflet.markercluster.js'],
+        'auto-include': True,
+    },
+    'MessageBox':{
+        'css': ['leafletapi/messagebox/leaflet-messagebox.css'],
+        'js': ['leafletapi/messagebox/leaflet-messagebox.js'],
+        'auto-include': True,
+    },
+    'Liveupdate':{
+        'css': ['leafletapi/liveupdate/leaflet-liveupdate.css'],
+        'js': ['leafletapi/liveupdate/leaflet-liveupdate.js'],
         'auto-include': True,
     },
     

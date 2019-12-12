@@ -199,6 +199,9 @@ a.article, a.article:hover {
     background-color: #adbce6;
   } 
 
+.buttonHolder{
+    text-align: center;
+ }
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
