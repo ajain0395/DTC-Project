@@ -7,10 +7,10 @@ sudo sh install_all.sh
 ## Database setup
 $ sudo - i -u postgres
 $ psql -U postgres
- # CREATE USER dtc WITH PASSWORD ‘dtc’;
- # CREATE DATABASE dtcdb OWNER dtc;
- # \q
+\# CREATE USER dtc WITH PASSWORD ‘dtc’;
+\# CREATE DATABASE dtcdb OWNER dtc;
+\# \q
 $ psql -U postgres dtcdb
- # CREATE EXTENSION postgis;
+\# CREATE EXTENSION postgis;
 
 reboot
