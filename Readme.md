@@ -1,6 +1,6 @@
 # System Setup
 ## Install Anaconda for python3
-https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart
+https://www.digitalocean.com/community/tutorials/how-to-install-anaconda-on-ubuntu-18-04-quickstart<br /> 
 reboot
 ## Other Setup required
 sudo sh install_all.sh
