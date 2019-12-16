@@ -21,3 +21,4 @@ $ psql -U postgres dtcdb<br />
 
 
 reboot<br /> 
+## For other installation issues read install.readme
