@@ -96,6 +96,7 @@ a, a:hover, a:focus {
     background: #fff;
 }
 
+
 #sidebar ul li.active > a, a[aria-expanded="true"] {
     color: #fff;
     background: #6d7fcc;
@@ -136,7 +137,9 @@ a.download {
     background: #fff;
     color: #7386D5;
 }
-
+.center-text{
+    text-align: center;
+}
 a.article, a.article:hover {
     background: #6d7fcc !important;
     color: #fff !important;
@@ -200,13 +203,18 @@ a.article, a.article:hover {
     width: 100%; */
  }
 
- li a:hover {
+ /* li a:hover {
     background-color: #adbce6;
-  } 
+  }  */
 
 .buttonHolder{
     text-align: center;
  }
+/* 
+ .img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center; } */
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

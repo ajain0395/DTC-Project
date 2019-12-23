@@ -51,7 +51,7 @@ def getroutes():
 
 class RVForm(forms.Form):
     vehicle_id_f = forms.ChoiceField(label = "Vehicle Ids",choices=getvehicles(),
-    widget=Select2Widget(attrs={'id':'vehicle_id_field_live'}),required=False,
+    widget=Select2Widget(attrs={'id':'vehicle_id_field_live','style':'width:96%'}),required=False,
      initial=-1)
     # widget=forms.SelectMultiple(attrs={'id':"boot-multiselect-demo" ,'multiple':"multiple"}),initial=-1)
     # route_id_f = forms.MultipleChoiceField(label = "Route Ids",choices=getroutes(),

@@ -1,183 +1,184 @@
 <!DOCTYPE html>
 <html>
-{% load leaflet_tags %} 
-{% load static %} 
+{% load leaflet_tags %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
-    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
-    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
-    {% leaflet_css %} 
-    {{ timeroute.media.css }} 
+    {% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %} {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %} {# Embed Bootstrap JS+jQuery #}
+    {% leaflet_css %}
+    {{ timeroute.media.css }}
     {{timeroute.media.js}}
     {{timeroute.media}}
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
     <script defer src="{% static 'js/solid.js' %}"></script>
     <script defer src="{% static 'js/jquerycode.js' %}"></script>
     <script defer src="{% static 'js/fontawesome.js' %}"></script>
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
 
     <script type="text/javascript">
-    iconsmap = {}
+        iconsmap = {}
 
-    function returnicon(iconnumber)
-    {
-      var busurl = "/static/bus_icon/"+iconnumber+".png";
-     return new L.Icon({
-  iconUrl: busurl,
-  iconSize: [30, 45],
-  iconAnchor: [12, 45],
-  popupAnchor: [1, -34],
-  shadowSize: [45, 45]
-})
-    }
-    function getnewicon(vehicle_id)
-    { 
-            if( typeof getnewicon.counter == 'undefined' ) {
-              getnewicon.counter = 0;
-          }
-          if(vehicle_id in iconsmap)
-          {
-            
-          }
-          else{
-            iconsmap[vehicle_id] = returnicon(getnewicon.counter%13);
-            getnewicon.counter++;
-          }
-            
+        function returnicon(iconnumber) {
+            var busurl = "/static/bus_icon/" + iconnumber + ".png";
+            return new L.Icon({
+                iconUrl: busurl,
+                iconSize: [30, 45],
+                iconAnchor: [12, 45],
+                popupAnchor: [1, -34],
+                shadowSize: [45, 45]
+            })
+        }
+        function getnewicon(vehicle_id) {
+            if (typeof getnewicon.counter == 'undefined') {
+                getnewicon.counter = 0;
+            }
+            if (vehicle_id in iconsmap) {
+
+            }
+            else {
+                iconsmap[vehicle_id] = returnicon(getnewicon.counter % 13);
+                getnewicon.counter++;
+            }
+
             return iconsmap[vehicle_id];
-    }
-        function map_points(map,options)
-         {
+        }
+        function map_points(map, options) {
             map.removeControl(map.zoomControl);
-                    var zoomHome = L.Control.zoomHome({position: 'topleft'});
-                    zoomHome.addTo(map);
+            var zoomHome = L.Control.zoomHome({ position: 'topleft' });
+            zoomHome.addTo(map);
             var heading = document.getElementById("p1");
             var timeelapsed = 0;
 
 
 
-            $("#playbackcheck").click( function(event) {
-        // alert("You changed the button using JQuery!" + $(this).val());
-        if($("#vehicle_id_field").val() == -1)
-        {
-            alert('Reselect Vehicle Id');
-        }
-        else
-        {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
-        xhr.onreadystatechange = xhrCallback;
-        xhr.send();
-        function xhrCallback() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            const data = JSON.parse(xhr.responseText);
-            const trackplayback = L.trackplayback(data, map, {
-                clockOptions: {
-    speed: 5,
-    maxSpeed: 65
-  },
-            targetOptions: {
-                useImg: false,
-                width: 12,
-    height: 27,
-    color: '#0066cc',
-    fillColor: '#0066cc',
-                imgUrl: "{% static 'bus_icon/ship.png' %}"
-            }
+            $("#playbackcheck").click(function (event) {
+                // alert("You changed the button using JQuery!" + $(this).val());
+                if ($("#vehicle_id_field").val() == -1) {
+                    alert('Reselect Vehicle Id');
+                }
+                else {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', "{% url 'playback:filtered-routes' %}", true);
+                    xhr.onreadystatechange = xhrCallback;
+                    xhr.send();
+                    function xhrCallback() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            const data = JSON.parse(xhr.responseText);
+                            const trackplayback = L.trackplayback(data, map, {
+                                clockOptions: {
+                                    speed: 5,
+                                    maxSpeed: 65
+                                },
+                                targetOptions: {
+                                    useImg: false,
+                                    width: 12,
+                                    height: 27,
+                                    color: '#0066cc',
+                                    fillColor: '#0066cc',
+                                    imgUrl: "{% static 'bus_icon/ship.png' %}"
+                                }
+                            });
+                            const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
+                            trackplaybackControl.addTo(map);
+                        }
+                    }
+                }
             });
-            const trackplaybackControl = L.trackplaybackcontrol(trackplayback);
-            trackplaybackControl.addTo(map);
         }
-        }
-    } 
-    });   
-            }        
-    
-    </script> 
+
+    </script>
     <title>DTC Project</title>
 
     {% if messages %} {% for message in messages %} {% if message.tags %}
     <script>
         alert("{{ message }}")
-    </script> 
+    </script>
     {% endif %} {% endfor %} {% endif %}
 </head>
+
 <body>
 
-            <div class="wrapper">
-                    <!-- Sidebar  -->
-                    <nav id="sidebar">
-                        <div class="sidebar-header">
-                            <h3>Filter Buses</h3>
-                        </div>
-                
-                        
-
-                        <div class="buttonHolder">
-
-                            
-                        <form action="/playback/" method="post" >
-                            {% csrf_token %}
-                            {{ timeroute|crispy}}
-                        </form>
-                        <input type="submit" id="playbackcheck" class="btn btn-success" value="Check">
-                        <button type="submit" name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'playback:playback' %}'" >Reset</button>
-
-                                          </div>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Filter Buses</h3>
+            </div>
 
 
-                    </nav>
-                
-                    <!-- Page Content  -->
-                    <div id="content">
-                
-                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                            <div class="container-fluid">
-            
-                                <button type="button" id="sidebarCollapse" class="btn btn-info">
-                                                <!-- <i class="fas fa-align-left"></i> -->
-                                                <span></span>
-                                                <span></span>
-                                                <span></span>
-                                            </button>
-                                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                                <i class="fas fa-align-justify"></i>
-                                            </button>
-            
-                                <div class="navbar-collapse collapse" id="navbarSupportedContent">
-                                    <ul class="nav navbar-nav ml-auto">
-                                        
-                                            <li class="nav-item">
-                                                    <a class="nav-link" href='{% url 'home' %}'>Home</a>
-                                                 </li>
-                                                <li class="nav-item ">
-                                                    <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
-                                                </li>
-                                        <li class="nav-item active">
-                                            <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
-                                        </li>
-                                        <li class="nav-item ">
-                                                <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
-                                         </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
-                
-                        {% leaflet_map "gis" callback="map_points"  %}
+
+            <div class="buttonHolder">
+
+
+                <form action="/playback/" method="post">
+                    {% csrf_token %}
+                    {{ timeroute|crispy}}
+                </form>
+                <input type="submit" id="playbackcheck" class="btn btn-success" value="Check">
+                <button type="submit" name="reset" value="reset" class="btn btn-success"
+                    onclick="location.href='{% url 'playback:playback' %}'">Reset</button>
+
+            </div>
+
+
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <!-- <i class="fas fa-align-left"></i> -->
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+
+                            <li class="nav-item">
+                                <a class="nav-link" href='{% url 'home' %}'>Home</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
+            </nav>
+
+            {% leaflet_map "gis" callback="map_points"  %}
+        </div>
+    </div>
 </body>
+
 </html>

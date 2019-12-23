@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html>
-{% load leaflet_tags %} 
-{% load static %} 
+{% load leaflet_tags %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    {% load bootstrap4 %}       {# import bootstrap4/bootstrap3 #}
-    {% bootstrap_css %}         {# Embed Bootstrap CSS #}
-    {% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
-    {% leaflet_css %} 
-    {{ form.media.css }} 
+    {% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %} {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %} {# Embed Bootstrap JS+jQuery #}
+    {% leaflet_css %}
+    {{ form.media.css }}
     {{form.media.js}}
-    {{form.media}} 
+    {{form.media}}
     {% leaflet_js %}
     <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
     <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
     <script defer src="{% static 'js/solid.js' %}"></script>
     <script defer src="{% static 'js/jquerycode.js' %}"></script>
     <script defer src="{% static 'js/fontawesome.js' %}"></script>
     <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
 
-    
+
 
     <script type="text/javascript">
-    var all_stops = "{% url 'stops:all-stops' %}";
-    var staticpath = "{% static '' %}";
-    var filtered_buses = "{% url 'stops:filtered-buses' %}";
-    var polylineurl = urll = "{% url 'stops:line-buses' %}";
-    var all_buses = "{% url 'stops:all-buses' %}";
-</script>
-<script defer type="text/javascript" src="{% static 'js/livetracking.js' %}"></script>
+        var all_stops = "{% url 'stops:all-stops' %}";
+        var staticpath = "{% static '' %}";
+        var filtered_buses = "{% url 'stops:filtered-buses' %}";
+        var polylineurl = urll = "{% url 'stops:line-buses' %}";
+        var all_buses = "{% url 'stops:all-buses' %}";
+    </script>
+    <script defer type="text/javascript" src="{% static 'js/livetracking.js' %}"></script>
     <title>DTC Project</title>
 
     {% if messages %} {% for message in messages %} {% if message.tags %}
@@ -51,19 +53,20 @@
         <!-- Sidebar  -->
         <nav id="sidebar">
             <div class="sidebar-header">
-                <h3>Filter Buses</h3>
+                <h3 class="center-text">Filter Buses</h3>
             </div>
 
 
             <!--  -->
             <div class="buttonHolder">
 
-            <form action="/livetracking/" method="post">
-                {% csrf_token %} 
-                {{ form|crispy}}
-                <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
-                <button name="reset" value="reset" class="btn btn-success"  onclick="location.href='{% url 'stops:livetracking' %}'" >Reset</button>
-            </form>
+                <form action="/livetracking/" method="post">
+                    {% csrf_token %}
+                    {{ form|crispy}}
+                    <input type="submit" name="filterbus" class="btn btn-success" value="Filter">
+                    <button name="reset" value="reset" class="btn btn-success"
+                        onclick="location.href='{% url 'stops:livetracking' %}'">Reset</button>
+                </form>
             </div>
             <!-- <button type="submit"  onclick="location.href='{% url 'playback:playback' %}'" >PlayBack</button> -->
         </nav>
@@ -75,24 +78,26 @@
                 <div class="container-fluid">
 
                     <button type="button" id="sidebarCollapse" class="btn btn-info">
-                                    <!-- <i class="fas fa-align-left"></i> -->
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </button>
-                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                                    <i class="fas fa-align-justify"></i>
-                                </button>
+                        <!-- <i class="fas fa-align-left"></i> -->
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
 
                     <div class="navbar-collapse collapse" id="navbarSupportedContent">
                         <ul class="nav navbar-nav ml-auto">
-                            
-                                <li class="nav-item">
-                                        <a class="nav-link" href='{% url 'home' %}'>Home</a>
-                                     </li>
-                                    <li class="nav-item active">
-                                        <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
-                                    </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href='{% url 'home' %}'>Home</a>
+                            </li>
+                            <li class="nav-item active">
+                                <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
+                            </li>
                             <li class="nav-item ">
                                 <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
                             </li>
@@ -100,8 +105,8 @@
                                 <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
                             </li>
                             <li class="nav-item ">
-                                    <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
-                             </li>
+                                <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
