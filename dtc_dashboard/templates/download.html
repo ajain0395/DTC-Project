@@ -73,16 +73,19 @@
             </div>
         </nav>
           
-
-        <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
+<div class="center">
+        <form class="form-horizontal center" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ downloadForm|crispy }}
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
+            <!-- <div class="form-group"> -->
+                <!-- <div class="col-sm-offset-3 col-sm-9 center"> -->
+                    <div class="buttonHolder">
                     <button type="submit" class = "btn btn-success">Download</button>
-                </div>
-            </div>
+                    </div>
+                <!-- </div>  -->
+            <!-- </div> -->
         </form>
+    </div>
     </div>
    
 </div>
