@@ -251,7 +251,7 @@ class playBackView(TemplateView):
             tmp['lng'] = i['longitude']
             tmp['lat'] = i['latitude']
             tmp['time'] = datetime.timestamp(i['timestamp'])
-            tmp['info'] = [{'key':'Vehicle Id: ','value':cookie_data['vehicle_id']},{'key':'Route Id: ','value':routes_all_d[i['route_id']] +' ' + str(i['route_id'])},{'key':'Congestion: ','value':i['congestion']}]
+            tmp['info'] = [{'key':'Vehicle Id: ','value':cookie_data['vehicle_id']},{'key':'Route Id: ','value':routes_all_d[i['route_id']] +' ' + str(i['route_id'])},{'key':'Congestion: ','value':congestionvalue(i['congestion'])}]
             # tmp['time'] = datetime.timestamp(i[j])
             
             q_ls.append(tmp)
