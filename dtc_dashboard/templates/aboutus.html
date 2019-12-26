@@ -1,75 +1,460 @@
-{% extends 'base.html' %}
-{% load crispy_forms_tags %}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% load static %}
+    {% load bootstrap4 %} {# import bootstrap4/bootstrap3 #}
+    {% bootstrap_css %} {# Embed Bootstrap CSS #}
+    {% bootstrap_javascript jquery='full' %} {# Embed Bootstrap JS+jQuery #}
 
 
-{% block head %}
+    {{ form.media.css }}
+    {{form.media.js}}
+    {{form.media}}
 
-    {% if messages %}
-    {% for message in messages %}
-     {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" /> -->
 
-    {% endfor %}
-
-    {% endif %}
-    
-{% endblock %}
-
-{% block content %}
+    <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/> -->
 
 
 
-<div class="wrapper">
-    
-    
-    
-    <div id="content">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                
-            <div class="container-fluid">
-                <h5 style="text-align: center;"><font color="black">About Us</font></h5>               
-                    
-                
-                <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <i class="fas fa-align-justify"></i>
-                </button>
-               
-                <div class="navbar-collapse collapse" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ml-auto">
-                        
+    <link rel="stylesheet" href="{% static 'templatelayoutcss/sidebartemplate.css' %}" />
+    <title>DTC Project</title>
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"> -->
+    <style type="text/css">
+        /* FontAwesome for working BootSnippet :> */
+
+        @import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css');
+
+        #team {
+            background: #eee !important;
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus {
+            background-color: #6d7fcc;
+            border-color: #6d7fcc;
+            box-shadow: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #7386D5;
+            border-color: #7386D5;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        section .section-title {
+            text-align: center;
+            color: #7386D5;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+
+        #team .card {
+            border: none;
+            background: #ffffff;
+        }
+
+        .image-flip:hover .backside,
+        .image-flip.hover .backside {
+            -webkit-transform: rotateY(0deg);
+            -moz-transform: rotateY(0deg);
+            -o-transform: rotateY(0deg);
+            -ms-transform: rotateY(0deg);
+            transform: rotateY(0deg);
+            border-radius: .25rem;
+        }
+
+        .image-flip:hover .frontside,
+        .image-flip.hover .frontside {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+        }
+
+        .mainflip {
+            -webkit-transition: 1s;
+            -webkit-transform-style: preserve-3d;
+            -ms-transition: 1s;
+            -moz-transition: 1s;
+            -moz-transform: perspective(1000px);
+            -moz-transform-style: preserve-3d;
+            -ms-transform-style: preserve-3d;
+            transition: 1s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .frontside {
+            position: relative;
+            -webkit-transform: rotateY(0deg);
+            -ms-transform: rotateY(0deg);
+            z-index: 2;
+            margin-bottom: 30px;
+        }
+
+        .backside {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            -webkit-transform: rotateY(-180deg);
+            -moz-transform: rotateY(-180deg);
+            -o-transform: rotateY(-180deg);
+            -ms-transform: rotateY(-180deg);
+            transform: rotateY(-180deg);
+            -webkit-box-shadow: 5px 7px 9px -4px rgb(158, 158, 158);
+            -moz-box-shadow: 5px 7px 9px -4px rgb(158, 158, 158);
+            box-shadow: 5px 7px 9px -4px rgb(158, 158, 158);
+        }
+
+        .frontside,
+        .backside {
+            -webkit-backface-visibility: hidden;
+            -moz-backface-visibility: hidden;
+            -ms-backface-visibility: hidden;
+            backface-visibility: hidden;
+            -webkit-transition: 1s;
+            -webkit-transform-style: preserve-3d;
+            -moz-transition: 1s;
+            -moz-transform-style: preserve-3d;
+            -o-transition: 1s;
+            -o-transform-style: preserve-3d;
+            -ms-transition: 1s;
+            -ms-transform-style: preserve-3d;
+            transition: 1s;
+            transform-style: preserve-3d;
+        }
+
+        .frontside .card,
+        .backside .card {
+            min-height: 312px;
+        }
+
+        .backside .card a {
+            font-size: 18px;
+            color: #7386D5 !important;
+        }
+
+        .frontside .card .card-backsidetitle,
+        .backside .card .card-title {
+            color: #7386D5 !important;
+        }
+
+        .frontside .card .card-body img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+        }
+
+        .card ul li {
+            list-style: none;
+            float: center;
+        }
+
+        .card ul li a {
+            display: block;
+            color: #aaa;
+            margin: 0 10px;
+            font-size: 20px;
+            transition: 0.5s;
+            text-align: center;
+        }
+
+        .card ul li:hover a {
+            /* color:#e91e63; */
+            transform: rotateY(360deg);
+        }
+    </style>
+    <script src="{% static 'templatelayoutcss/sidebartemplate.js' %}"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script> -->
+    <!-- Font Awesome JS -->
+    <!-- <script defer src="{% static 'js/solid.js' %}"></script> -->
+
+    <!-- <script defer src="{% static 'js/fontawesome.js' %}"></script> -->
+    <!-- <link rel="stylesheet" href="/templates/aboutus.css"/> -->
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+
+
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+                <div class="container-fluid">
+                    <h5 style="text-align: center;">
+                        <font color="black">About Us</font>
+                    </h5>
+
+
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fa fa-align-justify"></i>
+                    </button>
+
+                    <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+
                             <li class="nav-item">
-                                    <a class="nav-link" href='{% url 'home' %}'>Home</a>
-                                 </li>
-                                <li class="nav-item ">
-                                    <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
-                                </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
-                        </li>
-                        <li class="nav-item active">
+                                <a class="nav-link" href='{% url 'home' %}'>Home</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'stops:livetracking' %}'>Live Tracking</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'playback:playback' %}'>Playback</a>
+                            </li>
+                            <li class="nav-item ">
+                                <a class="nav-link" href='{% url 'download:download' %}'>Download</a>
+                            </li>
+                            <li class="nav-item active">
                                 <a class="nav-link" href='{% url 'aboutus' %}'>About us</a>
-                         </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-          
+            </nav>
 
-        <!-- <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ downloadForm|crispy }}
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-9">
-                    <button type="submit" class = "btn btn-success">Download</button>
+            <!-- Team -->
+            <section id="team" class="pb-5">
+                <div class="container">
+                    <h5 class="section-title h1">OUR TEAM</h5>
+                    <div class="center">
+                        <div class="row">
+                            <!-- Team member -->
+                            <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
+                                    <div class="mainflip">
+                                        <div class="frontside">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <p><img class=" img-fluid" src="/static/ashish_jain2.jpg"
+                                                            alt="card image"></p>
+                                                    <h4 class="card-title">Ashish Jain</h4>
+                                                    <p class="card-text">M.Tech CSE <br>Data Engineering
+                                                        Specialization<br>2020 Passout
+                                                    </p>
+                                                    <!-- <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-envelope"></i></a> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="backside">
+                                            <div class="card">
+                                                <div class="card-body text-center mt-4">
+                                                    <h4 class="card-title">Ashish Jain</h4>
+                                                    <p class="card-text">M.Tech CSE
+                                                        <br>
+                                                        Data Engineering Specialization
+                                                        <!-- <br>Currently working with Qualcomm India Private Limited -->
+                                                        <br>
+                                                        <!-- <p style="color:white">-----------------------------------------------------------</p> -->
+                                                    </p>
+                                                    <br>
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item">
+                                                            <a class="social-icon text-xs-center" target="_blank"
+                                                                href="https://www.facebook.com/ashishjain03">
+                                                                <i class="fa fa-facebook"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a class="social-icon text-xs-center" target="_blank"
+                                                                href="https://github.com/ajain0395">
+                                                                <i class="fa fa-github"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a class="social-icon text-xs-center" target="_blank"
+                                                                href="https://www.linkedin.com/in/ashishjain03/">
+                                                                <i class="fa fa-linkedin"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a class="social-icon text-xs-center" target="_blank"
+                                                                href="mailto:ashish18052@iiitd.ac.in">
+                                                                <i class="fa fa-google"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ./Team member -->
+                            <!-- Team member -->
+                            <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
+                                    <div class="mainflip">
+                                        <div class="frontside">
+                                            <div class="card">
+                                                <div class="card-body text-center">
+                                                    <p><img class=" img-fluid" src="/static/sarosh_hasan.jpg"
+                                                            alt="card image"></p>
+                                                    <h4 class="card-title">Sarosh Hasan</h4>
+                                                    <p class="card-text">M.Tech CSE<br>Information Security
+                                                        Specialization<br>2020 Passout</p>
+                                                    <!-- <a href="#" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i></a> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="backside">
+                                            <div class="card">
+                                                <div class="card-body text-center mt-4">
+                                                    <h4 class="card-title">Sarosh Hasan</h4>
+                                                    <p class="card-text">M.Tech CSE
+                                                        <br>
+                                                        Information Security Specialization
+                                                        <!-- <br>Currently working with Qualcomm India Private Limited -->
+                                                        <br>
+                                                        <!-- <p style="color:white">-----------------------------------------------------------</p> -->
+                                                    </p>
+                                                    <br>
+                                                    <ul class="list-inline">
+                                                        <li class="list-inline-item">
+                                                            <a target="_blank"
+                                                                href="https://www.facebook.com/sarosh.hasan.5">
+                                                                <i class="fa fa-facebook"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a target="_blank" href="https://github.com/sarosh14">
+                                                                <i class="fa fa-github"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a target="_blank"
+                                                                href="https://www.linkedin.com/in/sarosh-hasan-3257b7b9">
+                                                                <i class="fa fa-linkedin"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <a target="_blank" href="mailto:sarosh18084@iiitd.ac.in">
+                                                                <i class="fa fa-google"></i>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- ./Team member -->
+
+                        </div>
+                    </div>
+                    <!-- ///////////////////////////////////////////////////////////////////////////////// -->
+                    <h5 class="section-title h2">OUR MENTOR</h5>
+
+                    <div class="row center">
+                        <!-- Team member -->
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+
+                            <!-- <div class="col-xs-18 col-sm-8 col-md-6"> -->
+                            <div class="image-flip" ontouchstart="this.classList.toggle('hover');">
+                                <div class="mainflip">
+                                    <div class="frontside">
+                                        <div class="card">
+                                            <div class="card-body text-center">
+                                                <p><img class=" img-fluid" src="/static/vikram_sir.jpg"
+                                                        alt="card image"></p>
+                                                <h4 class="card-title">Dr. Vikram Goyal</h4>
+                                                <p class="card-text">
+                                                    Head & Associate Professor (CSE)
+                                                    <br>
+                                                    PhD (2009), Computer Science and Engineering, IIT Delhi
+                                                </p>
+                                                <!-- <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-envelope"></i></a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="backside">
+                                        <div class="card">
+                                            <div class="card-body text-center mt-4">
+                                                <h4 class="card-title">Dr. Vikram Goyal</h4>
+                                                <p class="card-text">
+                                                    <!-- <p style="color:white">-----------------------------------------------------------</p> -->
+                                                    Head & Associate Professor (CSE)
+                                                    <br>
+                                                    <br>Research interests are in the areas of Data Mining, Big Data
+                                                    Analytics, Data Privacy, and Information Security.
+                                                </p>
+                                                <br>
+                                                <ul class="list-inline">
+                                                    <li class="list-inline-item">
+                                                        <a class="social-icon text-xs-center" target="_blank"
+                                                            href="https://www.iiitd.edu.in/~vikram/">
+                                                            <i class="fa fa-globe"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ./Team member -->
+
+                    </div>
+
+                    <!-- ////////////////////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
                 </div>
-            </div>
-        </form> -->
+            </section>
+            <footer class="container py-5" style="margin-bottom: 0px">
+                <div class="row">
+                    <div class="col-6 col-md">
+                        <h5>About</h5>
+                        <ul class="list-unstyled text-small">
+                            <li><a class="text-muted" target="_blank"
+                                    href="http://delhi.gov.in/wps/wcm/connect/doit/Delhi+Govt/Delhi+Home">Delhi
+                                    Government</a></li>
+                            <li><a class="text-muted" target="_blank" href="https://iiitd.ac.in/">IIIT-Delhi</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-6 col-md">
+                        <a target="_blank" href="http://delhi.gov.in/wps/wcm/connect/doit/Delhi+Govt/Delhi+Home"><img
+                                src="/static/img/delhisarkar.png" width="40%" style="padding-top: 20px" /></a>
+                        <a target="_blank" href="https://iiitd.ac.in/"><img src="/static/img/iiitdlogo.png"
+                                width="40%" /></a>
+                    </div>
+
+
+                </div>
+            </footer>
+
+
+        </div>
+
     </div>
-   
-</div>
 
 
-{% endblock %}
+
+</body>
+
+</html>

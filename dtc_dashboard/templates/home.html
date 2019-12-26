@@ -11,7 +11,8 @@
     {% endfor %}
 
     {% endif %}
-    
+    <link href="home.css" rel="stylesheet">
+
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,8 @@
     
     
     <div id="content">
-
+        <!-- ================================================== -->
+    <!-- navigation bar -->
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 
 
@@ -59,12 +61,125 @@
             </div>
         </nav>
           
-        <para style="text-align: center;"><font color="black">The aim is to provide an efficient web application or dashboard for the public and government agencies, to monitor the DTC buses in realtime and to get the congestion details.</font></para>
-        <img src="static/img/livetracking.png" alt="Avatar" class="w3-left w3-circle w3-margin-right" >
-        
+
+        <!-- ================================================== -->
+    <!-- home content -->
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+          
+        <div class="row">
+            <div class="col-md-5 p-lg-5 mx-auto my-5">
+            <h1 class="display-4 font-weight-normal">DTC DASHBOARD</h1>
+            <p class="lead font-weight-normal">To provide an efficient web application or dashboard for the public and government agencies, to monitor the DTC buses in realtime and to get the congestion details.</p>
+            
+          </div>
+          <div class="col-md-6 p-lg-6 my-5 d-none d-md-block">
+              <img width="100%" src="/static/img/dtc_bus.png">
+            <div style="float: right;"><span style="font-size: 10px">Source: <a href="https://www.pinterest.com/pin/360780620131576373/" 
+                target="_blank">https://www.pinterest.com/pin/360780620131576373/</a></span></div>
+            </div>
+        </div>
+        </div>
+
+       
+          
+          <div class="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+            <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+              <div class="my-3 py-3">
+                <h2 class="display-5">LIVE TRACKING</h2>
+                <p class="lead">The page shows the cluster of buses running at that time and can track the real-time movement of a bus. The live tracking of a bus movement shows the line in different colors, which signifies the different levels of congestion on the route.</p>
+              </div>
+              <!-- <div class="bg-light box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"> -->
+                <img src="static/img/livetracking.png" alt="Avatar" style="width: 100%; height: 300px; border-radius: 21px 21px 0 0;" >
+              <!-- </div> -->
+            </div>
+            <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                <div class="my-3 p-3">
+                  <h2 class="display-5">BUS PLAYBACK</h2>
+                  <p class="lead">The page is used to get the playback of a particular bus i.e to see the movement of the bus from the past recorded data. The playback is helpful in finding the type of data transmitted by the sensors and can find different stats like congestion on a particular route.</p>
+            </div>
+              <!-- <div class="bg-dark box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"></div> -->
+              <img src="static/img/playback.png" alt="Avatar" style="width: 100%; height: 300px; border-radius: 21px 21px 0 0;" >
+            </div>
+          </div>
+      
+          <div class="d-md-flex flex-md-equal w-100 my-md-3 pl-md-3">
+            <div class="bg-dark mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center text-white overflow-hidden">
+              <div class="my-3 py-3">
+                <h2 class="display-5">DOWNLOAD</h2>
+                <p class="lead">The page helps the users to download the bus data in CSV format for a time period of one day for the date given in input. The data download is based on the vehicle id or the route id.
+                </p>
+              </div>
+              <!-- <div class="bg-light box-shadow mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;"> -->
+                <img src="static/img/download.png" alt="Avatar" style="width: 100%; height: 300px; border-radius: 21px 21px 0 0;" >
+              <!-- </div> -->
+            </div>
+            <div class="bg-light mr-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
+                <div class="my-3 p-3">
+                  <h2 class="display-5">ABOUT US</h2>
+                  <p class="lead">The page is used to show information about the project guide and the developers of the website. The page contains the links to the email and linked in handels and also contains the contact information. </p>
+            </div>
+            <div >
+              <img src="static/img/aboutus.png" alt="Avatar" style="width: 100%; height: 300px; border-radius: 21px 21px 0 0;" >
+            </div>
+            
+            </div>
+          </div>
+          
+      <!-- footer -->
+       <!-- footer -->
+       <footer class="container py-5" style="margin-bottom: 0px">
+        <div class="row">
+            <div class="col-6 col-md">
+                <h5>About</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" target="_blank"
+                           href="http://delhi.gov.in/wps/wcm/connect/doit/Delhi+Govt/Delhi+Home">Delhi Government</a></li>
+                    <li><a class="text-muted" target="_blank" href="https://iiitd.ac.in/">IIIT-Delhi</a></li>
+                </ul>
+            </div>
+           
+            <div class="col-6 col-md">
+                <a target="_blank" href="http://delhi.gov.in/wps/wcm/connect/doit/Delhi+Govt/Delhi+Home"><img
+                        src="/static/img/delhisarkar.png" width="40%" style="padding-top: 20px"/></a>
+                <a target="_blank" href="https://iiitd.ac.in/"><img src="/static/img/iiitdlogo.png"
+                            width="40%"/></a>
+            </div>
+            <!-- <div class="col-6 col-md">
+                <div style="align-content: center;">
+                    <a target="_blank" href="http://delhi.gov.in/wps/wcm/connect/DOIT_DTC/dtc/home">
+                        <img src="/static/img/dtc.png" width="20%"
+                             style="margin-left: auto;margin-right: auto; display: block;">
+                    </a>
+                </div>
+            <div style="align-content: center;">
+                <a target="_blank" href="https://www.dimts.in/">
+                    <img class="dimts_logo" src="/static/img/dimts.jpg" width="20%"
+                         style="margin-left: auto;margin-right: auto; display: block;">
+                </a>
+            </div> -->
+           
+        </div>
+    </footer>
+    
     </div>
-   
+        
 </div>
 
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="../../assets/js/vendor/popper.min.js"></script>
+    <script src="../../dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/js/vendor/holder.min.js"></script>
+    <script>
+      Holder.addTheme('thumb', {
+        bg: '#55595c',
+        fg: '#eceeef',
+        text: 'Thumbnail'
+      });
+    </script>
 
 {% endblock %}

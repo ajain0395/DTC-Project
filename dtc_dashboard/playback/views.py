@@ -15,6 +15,7 @@ from django.template import loader
 from django.template import RequestContext
 from django.contrib import messages
 import json
+from .forms import routes_all_d
 
 class BusFilter:
     time = 15
@@ -74,6 +75,13 @@ def playbackresponse(request):
     q_ls = list(queryres)
     # print (q_ls)
     return json.dumps(q_ls)
+
+def congestionvalue(level):
+    if(level == 0):
+        return "Low"
+    elif(level == 1):
+        return 'Medium'
+    return 'High'
 
 class playBackView(TemplateView):
     template_name = 'playback.html'
@@ -236,14 +244,14 @@ class playBackView(TemplateView):
             return HttpResponse()
         #route_id=cookie_data['route_id'],
         filtered_routes = Buses.objects.filter(vehicle_id=cookie_data['vehicle_id'],
-        timestamp__gte=cookie_data['startDate'],timestamp__lte=cookie_data['endDate']).order_by('timestamp').values('latitude','longitude','timestamp')
+        timestamp__gte=cookie_data['startDate'],timestamp__lte=cookie_data['endDate']).order_by('timestamp').values('latitude','longitude','route_id','congestion','timestamp')
         q_ls = []
         for i in filtered_routes:
             tmp = {}
             tmp['lng'] = i['longitude']
             tmp['lat'] = i['latitude']
             tmp['time'] = datetime.timestamp(i['timestamp'])
-            tmp['info'] = [{'key':'Vehicle Id: ','value':cookie_data['vehicle_id']}]
+            tmp['info'] = [{'key':'Vehicle Id: ','value':cookie_data['vehicle_id']},{'key':'Route Id: ','value':routes_all_d[i['route_id']] +' ' + str(i['route_id'])},{'key':'Congestion: ','value':i['congestion']}]
             # tmp['time'] = datetime.timestamp(i[j])
             
             q_ls.append(tmp)
