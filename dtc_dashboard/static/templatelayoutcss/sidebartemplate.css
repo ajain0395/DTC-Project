@@ -210,6 +210,10 @@ a.article, a.article:hover {
 .buttonHolder{
     text-align: center;
  }
+
+ script {
+    display: none;
+}
 /* 
  .img {
     background-size: cover;
