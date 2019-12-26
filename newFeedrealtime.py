@@ -188,26 +188,32 @@ def getcongestion(newGrid,latitude,longitude,learnedFile):
 def threadFunc(arr,connection,newGrid,loadedFile):
     #  wkb_w = WKBWriter()
      counter=0
+     total_entries_count = 0
      alldata = []
      for block in arr['entity']:
-        counter += 1
-        row = {}
-        row['vehicle_id'] = block['id']
-        row['trip_id'] = block['vehicle']['trip'].get('tripId','')
-        row['route_id'] = block['vehicle']['trip'].get('routeId','')
-        row['latitude'] = block['vehicle']['position'].get('latitude','')
-        row['longitude'] = block['vehicle']['position'].get('longitude','')
-        row['speed'] = block['vehicle']['position'].get('speed','')
-        row['timestamp'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
- #       row['trip_start_time'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
-        row['geometry'] = Point( block['vehicle']['position'].get('longitude',''),block['vehicle']['position'].get('latitude',''),srid=4326)
-        row['congestion'] = getcongestion(newGrid,row['latitude'],row['longitude'],loadedFile)
-        #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
-        #row['label'] = block['vehicle']['vehicle'].get('label','')
-        #t1=time.time()
-        alldata.append(row)
+        try:
+            total_entries_count +=1
+            row = {}
+            row['vehicle_id'] = block['id']
+            row['trip_id'] = block['vehicle']['trip'].get('tripId','')
+            row['route_id'] = block['vehicle']['trip'].get('routeId','')
+            row['latitude'] = block['vehicle']['position'].get('latitude','')
+            row['longitude'] = block['vehicle']['position'].get('longitude','')
+            row['speed'] = block['vehicle']['position'].get('speed','')
+            row['timestamp'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
+    #       row['trip_start_time'] = str(datetime.datetime.fromtimestamp(int(block['vehicle'].get('timestamp',''))))
+            row['geometry'] = Point( block['vehicle']['position'].get('longitude',''),block['vehicle']['position'].get('latitude',''),srid=4326)
+            row['congestion'] = getcongestion(newGrid,row['latitude'],row['longitude'],loadedFile)
+            #row['vehicle_id'] = block['vehicle']['vehicle'].get('id','')
+            #row['label'] = block['vehicle']['vehicle'].get('label','')
+            #t1=time.time()
+            alldata.append(row)
+            counter += 1
+        except:
+            print ('Entry Corrupt')
+            continue
      writing_success = insert_to_buses(iter(alldata),connection)
-     print ("Entries written ",len(alldata),"Success: ", writing_success)
+     print ("[Total Entries: ",counter,' Entries Corrupt: ',total_entries_count - counter," Writing Success: ", writing_success,']')
 
 
 
@@ -239,6 +245,8 @@ def getFrame(connection,newGrid,loadedFile):
         feed=getFeed()
         entityFlag=entityCheck(feed)
         print("Entity Present : ",entityFlag)
+        if (entityFlag == False):
+            time.sleep(2)
 
     dict_obj = MessageToDict(feed)
     temp2 = time.time()
