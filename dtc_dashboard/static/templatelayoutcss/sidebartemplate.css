@@ -137,9 +137,9 @@ a.download {
     background: #fff;
     color: #7386D5;
 }
-.center-text{
+/* .center-text{
     text-align: center;
-}
+} */
 a.article, a.article:hover {
     background: #6d7fcc !important;
     color: #fff !important;

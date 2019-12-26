@@ -27,7 +27,7 @@ def getroutes():
 
 class DownloadForm(forms.Form):
     #Date = DateTimeField(widget=forms.SelectDateWidget())
-    startDate= DateTimeField(widget=DatePickerInput(format = "%Y-%m-%d",attrs={'placeholder': 'YYYY-MM-DD','id':'download_startDate','class':'datetime-input'}),required=True)
+    startDate= DateTimeField(label="Date",widget=DatePickerInput(format = "%Y-%m-%d",attrs={'placeholder': 'YYYY-MM-DD','id':'download_startDate','class':'datetime-input'}),required=True)
     #endDateTime= DateTimeField(widget=DateTimePickerInput(format = "%Y-%m-%d %H:%M:%S",attrs={'placeholder': 'YYYY-MM-DD','id':'download_endtime'}),required=True)
     #startDate = DateTimeField(widget=forms.TextInput(attrs={'class':'datetime-input'}))
     vehicle_id = forms.CharField(label="Vehicle Id",widget=forms.TextInput(attrs={'placeholder': '','id':'download_vehicle_id_field'}),required=False)
